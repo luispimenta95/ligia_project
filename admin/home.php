@@ -1,387 +1,323 @@
-<?php
-session_start();
-if (!isset($_SESSION["logado"])) {
-  header("Location:../login.php");
-  session_destroy();
-}
-include '../conecta.php';
+﻿<?php
+  session_start();
+  if (!isset($_SESSION["logado"])) {
+    header("Location:../index.php");
+    session_destroy();
+  }
+  include '../conecta.php';
+  $pagina_atual = "home.php";
+  ?>
 
+<!doctype html>
+<html class="fixed">
 
-mysqli_set_charset($conn, 'utf8');
-$pagina = (isset($_GET['pagina'])) ? $_GET['pagina'] : 1;
-$pagina_atual = "noticias.php";
-//Selecionar todos os logs da tabela
-$result_log = "SELECT * from noticia n order by n.titulo_noticia";
-$resultado_log = mysqli_query($conn, $result_log);
+<?php include 'header_adm.php'; ?>
 
-//Contar o total de logs
-$total_logs = mysqli_num_rows($resultado_log);
-
-//Seta a quantidade de logs por pagina
-$quantidade_pg = 5;
-
-//calcular o número de pagina necessárias para apresentar os logs
-$num_pagina = ceil($total_logs / $quantidade_pg);
-
-//Calcular o inicio da visualizacao
-$incio = ($quantidade_pg * $pagina) - $quantidade_pg;
-
-//Selecionar os logs a serem apresentado na página
-?>
-<!DOCTYPE html>
-<html lang="en">
-
-<head>
-  <title>Bootstrap Example</title>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
-  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
-</head>
 
 <body>
-  <div class="container">
-    <table class="table table-bordered table-dark">
-      <thead>
-        <tr>
+  <section class="body">
 
-          <th> Titulo </th>
-          <th> Ações </th>
-
-          <th> Imagens </th>
-        </tr>
-        </tr>
-      </thead>
-      <tbody>
-        <?php
+    <!-- start: header -->
+    <header class="header">
 
 
-        while ($row = mysqli_fetch_assoc($resultado_log)) { ?>
+      <!-- start: search & user box -->
+      <div class="header-right">
 
+        <header class="header">
+          <div class="logo-container">
+            <a href="../" class="logo">
+              <img src="../public/assets/images/logo2.jpg" height="35" alt="Legrano Orgânicos">
+            </a>
+            <div class="visible-xs toggle-sidebar-left" data-toggle-class="sidebar-left-opened" data-target="html" data-fire-event="sidebar-left-opened">
+              <i class="fa fa-bars" aria-label="Toggle sidebar"></i>
+            </div>
+          </div>
 
-          <tr>
-
-            <th> <?php echo $row["titulo_noticia"] ?> </th>
-
-
-            <th>
-
-              <a href="#update<?php echo $row["id_noticia"] ?>" data-toggle="modal"><button type='button' class='btn btn-primary btn-sm'>Editar</button></a>
-
-              <a href="delete.php?id=<?php echo $row["id_noticia"] ?> " onclick="return confirm('Deseja realmente excluir o registro ?')"><button type='button' class='btn btn-danger btn-sm'>Excluir</button></a>
-              <a href="#new_img<?php echo $row["id_noticia"] ?>" data-toggle="modal"><button type='button' class='btn btn-success btn-sm'>Novas imagens</button></a>
-              <a href="../noticia.php?id=<?php echo $row["id_noticia"] ?> " target="_blank"> <button type='button' class='btn btn-default btn-sm'>Visualizar notícia</button></a>
-
-
-            </th>
-
-            <th>
-              <div class="container">
-                <div class="row">
-
-                  <?php
-
-                  $sql2 = "SELECT * from imagem_noticia n where n.id_noticia=" . $row["id_noticia"] . "";
-                  $result2 = $conn->query($sql2);
-                  while ($imagem = $result2->fetch_assoc()) { ?>
-                    <div class="col-md-3">
-
-                      <img src="UP/<?php echo $imagem['imagem']; ?>" class="img-fluid">
-                      <a href="delete_img.php?id=<?php echo $imagem["id_img_noticia"] ?> " onclick="return confirm('Deseja realmente excluir o registro ?')"><button type='button' class='btn btn-danger btn-sm'>Excluir</button></a>
-
-                    </div>
+          <div class="header-right">
+            <div id="userbox" class="userbox">
+              <a href="#" data-toggle="dropdown">
+                <figure class="profile-picture">
+                  <img src="../public/assets/images/user.jpg" alt="Joseph Doe" class="img-circle" data-lock-picture="../public/assets/images/!logged-user.jpg">
+                </figure>
+                <div class="profile-info" data-lock-name="John Doe" data-lock-email="johndoe@JSOFT.com">
+                  <span class="name"><?php echo $_SESSION["nome_administrador"] ?></span>
+                  <span class="role">Legrano | Administrativo</span>
 
                 </div>
-
+                <i class="fa custom-caret"></i>
+              </a>
+              <div class="dropdown-menu">
+                <ul class="list-unstyled">
+                  <li class="divider"></li>
+                  <li>
+                    <a role="menuitem" tabindex="-1" href="../logout_adm.php"><i class="fa fa-power-off"></i> Logout</a>
+                  </li>
+                </ul>
               </div>
+            </div>
+          </div>
+      </div>
 
-  </div>
+    </header>
+    <!-- end: header -->
 
-<?php }
+    <div class="inner-wrapper">
+      <!-- start: sidebar -->
+      <aside id="sidebar-left" class="sidebar-left">
 
-?>
-</th>
+        <div class="sidebar-header">
 
-
-
-<!-- ================================== lista de dependentes ========================== -->
-
-
-
-
-
-
-
-<form action="update.php" method="post" class="form-group" enctype="multipart/form-data">
-
-  <div id="update<?php echo $row["id_noticia"] ?>" class="modal fade" role="dialog" class="form-group">
-    <div class="modal-dialog">
-
-      <!-- Modal content-->
-      <div class="modal-content">
-        <div class="modal-header">
-          <button type="button" class="close" data-dismiss="modal">&times;</button>
-          <h4 class="modal-title">Editar <?php echo $row["titulo_noticia"] ?></h4>
         </div>
-        <div class="modal-body">
+
+        <div class="nano">
+          <!-- Menu Lateral -->
+
+          <ul class="list-group">
+            <a href="home.php">
+              <li class="<?php if ($pagina_atual = "home.php") {
+                            echo "list-group-item active";
+                          } else {
+                            echo "list-group-item";
+                          } ?>">Home</li>
+            </a>
+            <a href="clientes.php">
+              <li class="list-group-item">Sócios </li>
+            </a>
+            <a href="dependentes.php">
+              <li class="list-group-item">Dependentes </li>
+            </a>
+            <a href="movimentacoes.php">
+              <li class="list-group-item">Registros financeiros </li>
+            </a>
+            <a href="log.php">
+              <li class="list-group-item">Registros de cadastro</li>
+            </a>
+            <a href="promocoes.php">
+              <li class="list-group-item">Promoções</li>
+            </a>
+
+            <a href="mensagens.php">
+              <li class="list-group-item">Mensagens </li>
+            </a>
 
 
 
+          </ul>
+        </div>
+
+      </aside>
+      <!-- end: sidebar -->
+
+      <section role="main" class="content-body">
+        <header class="page-header">
+
+        </header>
+
+        <div class="row">
           <div class="col-md-12">
 
 
 
-            <div class="form-group">
-              <label for="exampleInputEmail1">Titulo</label>
-              <input type="text" class="form-control" id="exampleInputEmail1" name="titulo" value="<?php echo $row["titulo_noticia"] ?>">
-            </div>
-
-            <div class="form-group">
-              <label for="exampleInputEmail1">Texto da noticia</label>
-              <textarea class="form-control" id="exampleFormControlTextarea1" rows="3" name="noticia"><?php echo $row["texto_noticia"] ?></textarea>
-
-            </div>
-
-            <div class="form-group">
-              <label for="exampleInputEmail1">Link do video</label>
-              <input type="text" class="form-control" id="exampleInputEmail1" name="link" value="<?php echo $row["video"] ?>">
-            </div>
-
-            <div class="form-group">
-              <input type="hidden" class="form-control" id="exampleInputEmail1" name="cod" value="<?php echo $row["id_noticia"] ?>" readonly>
-            </div>
-
-
-
           </div>
 
 
-        </div>
-        <div class="modal-footer">
-
-          <button type="submit" class=" btn btn-primary">Alterar dados</button>
+          <!-- start: page -->
 
 
-          <button type="submit" class=" btn btn-danger" data-dismiss="modal">Voltar</button>
-        </div>
-      </div>
+          <div class="col-md-12 col-lg-6 col-xl-6">
+            <section class="panel panel-featured-left panel-featured-secondary">
+              <div class="panel-body">
+                <div class="widget-summary">
+                  <div class="widget-summary-col widget-summary-col-icon">
+                    <div class="summary-icon bg-secondary">
+                      <i class="fa fa-usd"></i>
+                    </div>
+                  </div>
+                  <div class="widget-summary-col">
+                    <div class="summary">
+                      <h4 class="title">Crédito disponível</h4>
+                      <div class="info">
+                        <?php
+                        $data01 = date('y-m-d');
 
+                        $sql = "SELECT SUM(saldo_cliente) AS soma FROM cliente WHERE ativo = '1' ";
+
+                        $result = $conn->query($sql);
+                        $row = $result->fetch_assoc();
+
+                        $total = number_format($row["soma"], 2, '.', '');
+
+                        ?>
+                        <strong class="amount">R$ <?php echo $total ?> </strong>
+                      </div>
+                    </div>
+                    <div class="summary-footer">
+                      <a class="text-muted text-uppercase" href="movimentacoes.php">Exibir finanças</a>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </section>
+          </div>
+
+
+          <div class="col-md-12 col-lg-6 col-xl-6">
+            <section class="panel panel-featured-left panel-featured-secondary">
+              <div class="panel-body">
+                <div class="widget-summary">
+                  <div class="widget-summary-col widget-summary-col-icon">
+                    <div class="summary-icon bg-secondary">
+                      <i class="fa fa-cogs"></i>
+                    </div>
+                  </div>
+                  <div class="widget-summary-col">
+                    <div class="summary">
+                      <h4 class="title">Registros do sistema</h4>
+                      <div class="info">
+                        <?php
+                        $data01 = date('y-m-d');
+
+                        $sql = "SELECT * from log_informacoes l WHERE l.id_movimentacao<6";
+
+                        $result = $conn->query($sql);
+                        $rowcount = mysqli_num_rows($result);
+                        ?>
+                        <strong class="amount"><?php echo $rowcount ?> </strong>
+                      </div>
+                    </div>
+                    <div class="summary-footer">
+                      <a class="text-muted text-uppercase" href="log.php">Exibir operações</a>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </section>
+          </div>
+
+
+          <div class="col-md-12 col-lg-6 col-xl-6">
+            <section class="panel panel-featured-left panel-featured-secondary">
+              <div class="panel-body">
+                <div class="widget-summary">
+                  <div class="widget-summary-col widget-summary-col-icon">
+                    <div class="summary-icon bg-secondary">
+                      <i class="fa fa-user"></i>
+                    </div>
+                  </div>
+                  <div class="widget-summary-col">
+                    <div class="summary">
+                      <h4 class="title">Total de clientes </h4>
+                      <div class="info">
+                        <?php
+                        $sql = "select * from cliente";
+                        $result = $conn->query($sql);
+                        $rowcount = mysqli_num_rows($result);
+                        ?>
+                        <strong class="amount"><?php echo $rowcount ?></strong>
+                      </div>
+                    </div>
+                    <div class="summary-footer">
+                      <a class="text-muted text-uppercase" href="clientes.php">Exibir clientes </a>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </section>
+          </div>
+
+
+
+          <div class="col-md-12 col-lg-6 col-xl-6">
+            <section class="panel panel-featured-left panel-featured-secondary">
+              <div class="panel-body">
+                <div class="widget-summary">
+                  <div class="widget-summary-col widget-summary-col-icon">
+                    <div class="summary-icon bg-secondary">
+                      <i class="fa fa-user"></i>
+                    </div>
+                  </div>
+                  <div class="widget-summary-col">
+                    <div class="summary">
+                      <h4 class="title">Total de compradores autorizados </h4>
+                      <div class="info">
+                        <?php
+                        $sql = "select * from comprador";
+                        $result = $conn->query($sql);
+                        $rowcount = mysqli_num_rows($result);
+                        ?>
+                        <strong class="amount"><?php echo $rowcount ?></strong>
+                      </div>
+                    </div>
+                    <div class="summary-footer">
+                      <a class="text-muted text-uppercase" href="dependentes.php">Exibir compradores autorizados </a>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </section>
+          </div>
+
+
+
+      </section>
     </div>
+    </div>
+    <!-- end: page -->
+  </section>
   </div>
 
-</form>
 
-
-
-
-<form action="new_img.php" method="post" class="form-group" enctype="multipart/form-data">
-
-  <div id="new_img<?php echo $row["id_noticia"] ?>" class="modal fade" role="dialog" class="form-group">
-    <div class="modal-dialog">
-
-      <!-- Modal content-->
-      <div class="modal-content">
-        <div class="modal-header">
-          <button type="button" class="close" data-dismiss="modal">&times;</button>
-          <h4 class="modal-title">Inserir imagens <?php echo $row["titulo_noticia"] ?></h4>
-        </div>
-        <div class="modal-body">
-
-
-
-          <div class="col-md-12">
-
-
-
-            <div class="form-group">
-              <label for="exampleInputEmail1">Titulo</label>
-              <input type="text" class="form-control" id="exampleInputEmail1" name="titulo" value="<?php echo $row["titulo_noticia"] ?>" readonly>
-            </div>
-
-
-
-
-            <div class="form-group">
-              <input type="hidden" class="form-control" id="exampleInputEmail1" name="cod" value="<?php echo $row["id_noticia"] ?>" readonly>
-            </div>
-
-            <div class="form-group">
-              <label for="exampleInputEmail1"> Imagens</label>
-              <input type="file" class="form-control" id="exampleInputEmail1" name="arquivo[]" multiple="multiple">
-            </div>
-
-          </div>
-
-
-        </div>
-        <div class="modal-footer">
-
-          <button type="submit" class=" btn btn-primary">Inserir imagens</button>
-
-
-          <button type="submit" class=" btn btn-danger" data-dismiss="modal">Voltar</button>
-        </div>
-      </div>
-
-    </div>
-  </div>
-
-</form>
-
-<!-- Começo cadastro -->
-<form action="upload.php" method="POST" class="form-group" enctype="multipart/form-data">
-
-  <div id="cadastro" class="modal fade" role="dialog" class="form-group">
-    <div class="modal-dialog">
-
-      <!-- Modal content-->
-      <div class="modal-content">
-        <div class="modal-header">
-          <button type="button" class="close" data-dismiss="modal">&times;</button>
-
-          <h4 class="modal-title">Cadastro de noticias</h4>
-        </div>
-        <div class="modal-body">
-
-
-
-          <div class="form-group">
-            <label for="exampleInputEmail1">Titulo</label>
-            <input type="text" class="form-control" id="exampleInputEmail1" name="titulo">
-          </div>
-
-
-          <div class="form-group">
-            <label for="exampleInputEmail1">Texto da noticia</label>
-            <textarea class="form-control" id="exampleFormControlTextarea1" rows="3" name="noticia"></textarea>
-
-          </div>
-
-
-          <div class="form-group">
-            <label for="exampleInputEmail1">Link do video</label>
-            <input type="text" class="form-control" id="exampleInputEmail1" name="link">
-          </div>
-
-          <div class="form-group">
-            <label for="exampleInputEmail1">Selecionar imagens</label>
-            <input type="file" class="form-control" id="exampleInputEmail1" name="arquivo[]" multiple="multiple">
-          </div>
-
-
-
-          <div class="modal-footer">
-            <button type="submit" class=" btn btn-primary">Realizar cadastro</button>
-
-            <button type="submit" class=" btn btn-danger" data-dismiss="modal">Cancelar</button>
-          </div>
-        </div>
-
-      </div>
-    </div>
-
-</form>
-
-
-
-<!-- Fim Cadastro -->
-
-
-
-<!-- ================================== lista de movimentações recentes ========================== -->
-
-
-
-
-
-<!-- ================================== Deposito ========================== -->
-
-
-
-
-<!-- ================================== CADASTRO DE SÓCIOS ========================== -->
-
-
-
-<!-- ================================== Saque ========================== -->
-
-
-
-
-
-
-<?php } ?>
-</tr>
-
-</tbody>
-</table>
-
-<div>
-  <h3>Modal Example</h3>
-  <p>Click on the button to open the modal.</p>
-
-  <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#myModal">
-    Open modal
-  </button>
-</div>
-
-<!-- The Modal -->
-<div class="modal" id="myModal">
-  <div class="modal-dialog">
-    <div class="modal-content">
-
-      <!-- Modal Header -->
-      <div class="modal-header">
-        <h4 class="modal-title">Modal Heading</h4>
-        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
-      </div>
-
-      <!-- Modal body -->
-      <div class="modal-body">
-
-
-      <form action="upload.php" method="POST" class="form-group" enctype="multipart/form-data">
-
-<div class="form-group">
-  <label for="exampleInputEmail1">Titulo</label>
-  <input type="text" class="form-control" id="exampleInputEmail1" name="titulo">
-</div>
-
-
-<div class="form-group">
-  <label for="exampleInputEmail1">Texto da noticia</label>
-  <textarea class="form-control" id="exampleFormControlTextarea1" rows="3" name="noticia"></textarea>
-
-</div>
-
-
-<div class="form-group">
-  <label for="exampleInputEmail1">Link do video</label>
-  <input type="text" class="form-control" id="exampleInputEmail1" name="link">
-</div>
-
-<div class="form-group">
-  <label for="exampleInputEmail1">Selecionar imagens</label>
-  <input type="file" class="form-control" id="exampleInputEmail1" name="arquivo[]" multiple="multiple">
-</div>
-
-
-
-<div class="modal-footer">
-  <button type="submit" class=" btn btn-primary">Realizar cadastro</button>
-
-  <button type="submit" class=" btn btn-danger" data-dismiss="modal">Cancelar</button>
-</div>
-      </form>
-</div>
-
-  
-
-    </div>
-  </div>
-</div>
-</div>
-
+  </section>
+
+  <!-- Vendor -->
+  <script src="../public/assets/vendor/jquery/jquery.js"></script>
+  <script src="../public/assets/vendor/jquery-browser-mobile/jquery.browser.mobile.js"></script>
+  <script src="../public/assets/vendor/bootstrap/js/bootstrap.js"></script>
+  <script src="../public/assets/vendor/nanoscroller/nanoscroller.js"></script>
+  <script src="../public/assets/vendor/bootstrap-datepicker/js/bootstrap-datepicker.js"></script>
+  <script src="../public/assets/vendor/magnific-popup/magnific-popup.js"></script>
+  <script src="../public/assets/vendor/jquery-placeholder/jquery.placeholder.js"></script>
+
+  <!-- Specific Page Vendor -->
+  <script src="../public/assets/vendor/jquery-ui/js/jquery-ui-1.10.4.custom.js"></script>
+  <script src="../public/assets/vendor/jquery-ui-touch-punch/jquery.ui.touch-punch.js"></script>
+  <script src="../public/assets/vendor/jquery-appear/jquery.appear.js"></script>
+  <script src="../public/assets/vendor/bootstrap-multiselect/bootstrap-multiselect.js"></script>
+  <script src="../public/assets/vendor/jquery-easypiechart/jquery.easypiechart.js"></script>
+  <script src="../public/assets/vendor/flot/jquery.flot.js"></script>
+  <script src="../public/assets/vendor/flot-tooltip/jquery.flot.tooltip.js"></script>
+  <script src="../public/assets/vendor/flot/jquery.flot.pie.js"></script>
+  <script src="../public/assets/vendor/flot/jquery.flot.categories.js"></script>
+  <script src="../public/assets/vendor/flot/jquery.flot.resize.js"></script>
+  <script src="../public/assets/vendor/jquery-sparkline/jquery.sparkline.js"></script>
+  <script src="../public/assets/vendor/raphael/raphael.js"></script>
+  <script src="../public/assets/vendor/morris/morris.js"></script>
+  <script src="../public/assets/vendor/gauge/gauge.js"></script>
+  <script src="../public/assets/vendor/snap-svg/snap.svg.js"></script>
+  <script src="../public/assets/vendor/liquid-meter/liquid.meter.js"></script>
+  <script src="../public/assets/vendor/jqvmap/jquery.vmap.js"></script>
+  <script src="../public/assets/vendor/jqvmap/data/jquery.vmap.sampledata.js"></script>
+  <script src="../public/assets/vendor/jqvmap/maps/jquery.vmap.world.js"></script>
+  <script src="../public/assets/vendor/jqvmap/maps/continents/jquery.vmap.africa.js"></script>
+  <script src="../public/assets/vendor/jqvmap/maps/continents/jquery.vmap.asia.js"></script>
+  <script src="../public/assets/vendor/jqvmap/maps/continents/jquery.vmap.australia.js"></script>
+  <script src="../public/assets/vendor/jqvmap/maps/continents/jquery.vmap.europe.js"></script>
+  <script src="../public/assets/vendor/jqvmap/maps/continents/jquery.vmap.north-america.js"></script>
+  <script src="../public/assets/vendor/jqvmap/maps/continents/jquery.vmap.south-america.js"></script>
+
+  <!-- Theme Base, Components and Settings -->
+  <script src="../public/assets/javascripts/theme.js"></script>
+
+  <!-- Theme Custom -->
+  <script src="../public/assets/javascripts/theme.custom.js"></script>
+
+  <!-- Theme Initialization Files -->
+  <script src="../public/assets/javascripts/theme.init.js"></script>
+
+
+  <!-- Examples -->
+  <script src="../public/assets/javascripts/dashboard/examples.dashboard.js"></script>
 </body>
 
 </html>

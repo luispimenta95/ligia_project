@@ -1,5 +1,6 @@
 <?php
 include 'conecta.php';
+include 'config.php';
 $id = $_GET['id'];
 $proximo_id = $id + 1;
 $id_anterior = $id - 1;
@@ -106,8 +107,7 @@ $proxima_noticia = $next_result->fetch_assoc();
                             <h2><?php echo $noticia_atual["titulo_noticia"] ?>
                             </h2>
                             <ul class="blog-info-link mt-3 mb-4">
-                                <li><a href="#"><i class="fa fa-user"></i> Travel, Lifestyle</a></li>
-                                <li><a href="#"><i class="fa fa-comments"></i> 03 Comments</a></li>
+                                <li><a href="#"><i class="fa fa-user"></i><?php echo $GLOBALS['titulo']; ?></a></li>
                             </ul>
                             <p><?php echo nl2br($noticia_atual['texto_noticia']); ?></p>
                             <?php
@@ -192,30 +192,8 @@ $proxima_noticia = $next_result->fetch_assoc();
             </div>
     </section>
     <!--================ Blog Area end =================-->
-    <footer>
-        <!-- Footer Start-->
-        <div class="footer-area footer-padding fix">
-            <div class="container">
-                <!-- footer-bottom aera -->
-                <div class="footer-bottom-area">
-                    <div class="container">
-                        <div class="footer-border">
-                            <div class="row d-flex align-items-center justify-content-between">
-                                <div class="col-lg-12">
-                                    <div class="footer-copy-right">
-                                        <p><!-- Link back to Colorlib can't be removed. Template is licensed under CC BY 3.0. -->
-                                            Copyright &copy;<script>
-                                                document.write(new Date().getFullYear());
-                                            </script> All rights reserved | This template is made with <i class="ti-heart" aria-hidden="true"></i> by <a href="https://colorlib.com" target="_blank">Colorlib</a>
-                                            <!-- Link back to Colorlib can't be removed. Template is licensed under CC BY 3.0. --></p>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <!-- Footer End-->
-    </footer>
+    <?php include 'footer.php'; ?>
+
 
     <!-- JS here -->
 

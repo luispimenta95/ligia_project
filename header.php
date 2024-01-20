@@ -90,20 +90,25 @@ $datetime = new DateTime("now", new DateTimeZone("America/Recife"));
                                         <li><a href="index.php">Home</a></li>
                                         <li><a href="#">Categorias</a>
                                             <ul class="submenu">
-                                                <li><a href="categorias.html">Element</a></li>
-                                                <li><a href="categorias.html">Blog</a></li>
-                                                <li><a href="categorias.html">Blog Details</a></li>
-                                                <li><a href="categorias.html">Categori Details</a></li>
+                                                <?php
+
+                                                $sql2 = "SELECT * from categoria c order by c.nome_categoria ";
+                                                $result2 = $conn->query($sql2);
+                                                while ($categorias = $result2->fetch_assoc()) {
+                                                ?>
+                                                    <li>
+                                                        <a href="lista_categorias.php?id=<?php echo $categorias["id_categoria"] ?>" class="d-flex">
+                                                            <p><?php echo strtoupper($categorias["nome_categoria"]) ?></p>
+                                                        </a>
+                                                    </li>
+                                                <?php
+                                                }
+                                                ?>
+
                                             </ul>
                                         </li>
                                         <li><a href="#">Noticias</a>
                                             <ul class="submenu">
-                                                <!--  <li><a href="categorias.html">Element</a></li>
-                                                    <li><a href="categorias.html">Blog</a></li>
-                                                    <li><a href="categorias.html">Blog Details</a></li>
-                                                    <li><a href="categorias.html">Categori Details</a></li>
--->
-
                                                 <?php
 
                                                 $sql2 = "SELECT * from noticia n order by n.titulo_noticia ";

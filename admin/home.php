@@ -5,6 +5,8 @@
     session_destroy();
   }
   include '../conecta.php';
+  include '../config.php';
+
   $pagina_atual = "home.php";
   ?>
 
@@ -35,27 +37,8 @@
           </div>
 
           <div class="header-right">
-            <div id="userbox" class="userbox">
-              <a href="#" data-toggle="dropdown">
-                <figure class="profile-picture">
-                  <img src="../public/assets/images/user.jpg" alt="Joseph Doe" class="img-circle" data-lock-picture="../public/assets/images/!logged-user.jpg">
-                </figure>
-                <div class="profile-info" data-lock-name="John Doe" data-lock-email="johndoe@JSOFT.com">
-                  <span class="name"><?php echo $_SESSION["nome_administrador"] ?></span>
-                  <span class="role">Legrano | Administrativo</span>
+            <?php include 'topo.php'; ?>
 
-                </div>
-                <i class="fa custom-caret"></i>
-              </a>
-              <div class="dropdown-menu">
-                <ul class="list-unstyled">
-                  <li class="divider"></li>
-                  <li>
-                    <a role="menuitem" tabindex="-1" href="../logout_adm.php"><i class="fa fa-power-off"></i> Logout</a>
-                  </li>
-                </ul>
-              </div>
-            </div>
           </div>
       </div>
 
@@ -64,49 +47,8 @@
 
     <div class="inner-wrapper">
       <!-- start: sidebar -->
-      <aside id="sidebar-left" class="sidebar-left">
+      <?php include 'menu_lateral.php'; ?>
 
-        <div class="sidebar-header">
-
-        </div>
-
-        <div class="nano">
-          <!-- Menu Lateral -->
-
-          <ul class="list-group">
-            <a href="home.php">
-              <li class="<?php if ($pagina_atual = "home.php") {
-                            echo "list-group-item active";
-                          } else {
-                            echo "list-group-item";
-                          } ?>">Home</li>
-            </a>
-            <a href="clientes.php">
-              <li class="list-group-item">Sócios </li>
-            </a>
-            <a href="dependentes.php">
-              <li class="list-group-item">Dependentes </li>
-            </a>
-            <a href="movimentacoes.php">
-              <li class="list-group-item">Registros financeiros </li>
-            </a>
-            <a href="log.php">
-              <li class="list-group-item">Registros de cadastro</li>
-            </a>
-            <a href="promocoes.php">
-              <li class="list-group-item">Promoções</li>
-            </a>
-
-            <a href="mensagens.php">
-              <li class="list-group-item">Mensagens </li>
-            </a>
-
-
-
-          </ul>
-        </div>
-
-      </aside>
       <!-- end: sidebar -->
 
       <section role="main" class="content-body">
@@ -136,24 +78,25 @@
                   </div>
                   <div class="widget-summary-col">
                     <div class="summary">
-                      <h4 class="title">Crédito disponível</h4>
+                      <h4 class="title">Noticias cadastradas</h4>
                       <div class="info">
                         <?php
                         $data01 = date('y-m-d');
 
-                        $sql = "SELECT SUM(saldo_cliente) AS soma FROM cliente WHERE ativo = '1' ";
+                        $result_log = "SELECT * from noticia";
+                        $resultado_logs = mysqli_query($conn, $result_log);
 
-                        $result = $conn->query($sql);
-                        $row = $result->fetch_assoc();
+                        //Contar o total de logs
+                        $total_logs = mysqli_num_rows($resultado_logs);
 
-                        $total = number_format($row["soma"], 2, '.', '');
+
 
                         ?>
-                        <strong class="amount">R$ <?php echo $total ?> </strong>
+                        <strong><?php echo $total_logs ?> </strong>
                       </div>
                     </div>
                     <div class="summary-footer">
-                      <a class="text-muted text-uppercase" href="movimentacoes.php">Exibir finanças</a>
+                      <a class="text-muted text-uppercase" href="noticias.php">Exibir noticias</a>
                     </div>
                   </div>
                 </div>
@@ -162,101 +105,6 @@
           </div>
 
 
-          <div class="col-md-12 col-lg-6 col-xl-6">
-            <section class="panel panel-featured-left panel-featured-secondary">
-              <div class="panel-body">
-                <div class="widget-summary">
-                  <div class="widget-summary-col widget-summary-col-icon">
-                    <div class="summary-icon bg-secondary">
-                      <i class="fa fa-cogs"></i>
-                    </div>
-                  </div>
-                  <div class="widget-summary-col">
-                    <div class="summary">
-                      <h4 class="title">Registros do sistema</h4>
-                      <div class="info">
-                        <?php
-                        $data01 = date('y-m-d');
-
-                        $sql = "SELECT * from log_informacoes l WHERE l.id_movimentacao<6";
-
-                        $result = $conn->query($sql);
-                        $rowcount = mysqli_num_rows($result);
-                        ?>
-                        <strong class="amount"><?php echo $rowcount ?> </strong>
-                      </div>
-                    </div>
-                    <div class="summary-footer">
-                      <a class="text-muted text-uppercase" href="log.php">Exibir operações</a>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </section>
-          </div>
-
-
-          <div class="col-md-12 col-lg-6 col-xl-6">
-            <section class="panel panel-featured-left panel-featured-secondary">
-              <div class="panel-body">
-                <div class="widget-summary">
-                  <div class="widget-summary-col widget-summary-col-icon">
-                    <div class="summary-icon bg-secondary">
-                      <i class="fa fa-user"></i>
-                    </div>
-                  </div>
-                  <div class="widget-summary-col">
-                    <div class="summary">
-                      <h4 class="title">Total de clientes </h4>
-                      <div class="info">
-                        <?php
-                        $sql = "select * from cliente";
-                        $result = $conn->query($sql);
-                        $rowcount = mysqli_num_rows($result);
-                        ?>
-                        <strong class="amount"><?php echo $rowcount ?></strong>
-                      </div>
-                    </div>
-                    <div class="summary-footer">
-                      <a class="text-muted text-uppercase" href="clientes.php">Exibir clientes </a>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </section>
-          </div>
-
-
-
-          <div class="col-md-12 col-lg-6 col-xl-6">
-            <section class="panel panel-featured-left panel-featured-secondary">
-              <div class="panel-body">
-                <div class="widget-summary">
-                  <div class="widget-summary-col widget-summary-col-icon">
-                    <div class="summary-icon bg-secondary">
-                      <i class="fa fa-user"></i>
-                    </div>
-                  </div>
-                  <div class="widget-summary-col">
-                    <div class="summary">
-                      <h4 class="title">Total de compradores autorizados </h4>
-                      <div class="info">
-                        <?php
-                        $sql = "select * from comprador";
-                        $result = $conn->query($sql);
-                        $rowcount = mysqli_num_rows($result);
-                        ?>
-                        <strong class="amount"><?php echo $rowcount ?></strong>
-                      </div>
-                    </div>
-                    <div class="summary-footer">
-                      <a class="text-muted text-uppercase" href="dependentes.php">Exibir compradores autorizados </a>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </section>
-          </div>
 
 
 

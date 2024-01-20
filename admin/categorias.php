@@ -1,4 +1,4 @@
-﻿<?php
+<?php
 session_start();
 if (!isset($_SESSION["logado"])) {
   header("Location:../index.php");
@@ -10,7 +10,7 @@ mysqli_set_charset($conn, 'utf8');
 $pagina = (isset($_GET['pagina'])) ? $_GET['pagina'] : 1;
 $pagina_atual = "clientes.php";
 //Selecionar todos os logs da tabela
-$result_log = "SELECT * from noticia";
+$result_log = "SELECT * from categoria";
 $resultado_logs = mysqli_query($conn, $result_log);
 
 //Contar o total de logs
@@ -32,7 +32,11 @@ $incio = ($quantidade_pg * $pagina) - $quantidade_pg;
 
 <html class="fixed">
 
-<?php include 'header_adm.php'; ?>
+<?php
+include 'header_adm.php';
+include '../config.php';
+
+?>
 
 
 <body>
@@ -51,26 +55,8 @@ $incio = ($quantidade_pg * $pagina) - $quantidade_pg;
 
       <div class="header-right">
 
-        <div id="userbox" class="userbox">
-          <a href="#" data-toggle="dropdown">
-            <figure class="profile-picture">
-              <img src="../public/assets/images/user.jpg" alt="Joseph Doe" class="img-circle" data-lock-picture="../public/assets/images/!logged-user.jpg">
-            </figure>
-            <div class="profile-info" data-lock-name="John Doe" data-lock-email="johndoe@JSOFT.com"><span class="name">
-                <?php echo $_SESSION["nome_administrador"] ?></span>
-              <span class="role">Legrano | Administrativo</span>
-            </div>
-            <i class="fa custom-caret"></i>
-          </a>
-          <div class="dropdown-menu">
-            <ul class="list-unstyled">
-              <li class="divider"></li>
-              <li>
-                <a role="menuitem" tabindex="-1" href="logout_adm.php"><i class="fa fa-power-off"></i> Logout</a>
-              </li>
-            </ul>
-          </div>
-        </div>
+        <?php include 'topo.php'; ?>
+
       </div>
       </div>
 
@@ -78,66 +64,8 @@ $incio = ($quantidade_pg * $pagina) - $quantidade_pg;
     <!-- end: header -->
 
     <div class="inner-wrapper">
-      <!-- start: sidebar -->
+      <?php include 'menu_lateral.php'; ?>
 
-
-      <aside id="sidebar-left" class="sidebar-left">
-
-        <div class="sidebar-header ">
-
-
-        </div>
-
-        <div class="nano">
-          <!-- Menu Lateral -->
-
-          <ul class="list-group">
-            <a href="home.php">
-              <li class="list-group-item">Home</li>
-            </a>
-            <a href="clientes.php">
-              <li class="<?php if ($pagina_atual = "clientes.php") {
-                            echo "list-group-item active";
-                          } else {
-                            echo "list-group-item";
-                          } ?>">Sócios </li>
-            </a>
-
-            <a href="promocoes.php">
-              <li class="list-group-item">Categorias</li>
-            </a>
-
-          </ul>
-          <div class="accordion" id="accordionExample">
-            <div class="card">
-              <div class="card-header" id="headingOne">
-                <h5 class="mb-0">
-                  <button class="btn btn-primary btn-sm" type="button" data-toggle="collapse" data-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
-                    Filtar clientes por nome
-
-                  </button>
-                </h5>
-              </div>
-
-              <div id="collapseOne" class="collapse show" aria-labelledby="headingOne" data-parent="#accordionExample">
-                <div class="card-body">
-                  <form method="POST" action="clientes.php" class="search nav-form">
-                    <div class="input-group input-search">
-                      <input type="text" class="form-control" name="termo" id="q" placeholder="Pesquisa por nome...">
-                      <span class="input-group-btn">
-                        <button class="btn btn-default" type="submit"><i class="fa fa-search"></i></button>
-                      </span>
-                    </div>
-                  </form>
-                </div>
-              </div>
-            </div>
-
-
-          </div>
-
-        </div>
-      </aside>
       <!-- end: sidebar -->
 
       <section role="main" class="content-body">
@@ -149,7 +77,7 @@ $incio = ($quantidade_pg * $pagina) - $quantidade_pg;
           <div class="col-md-12">
             <?php
             if ($total_logs == 0) {
-              $result_logs = "SELECT * from noticia n  limit $incio, $quantidade_pg ";
+              $result_logs = "SELECT * from categoria n  limit $incio, $quantidade_pg ";
 
               $resultado_logs = mysqli_query($conn, $result_logs);
               $total_logs = mysqli_num_rows($resultado_logs);
@@ -162,8 +90,8 @@ $incio = ($quantidade_pg * $pagina) - $quantidade_pg;
                 <thead>
                   <tr>
 
-                    <th>Cliente </th>
-                    <th>Dependentes</th>
+                    <th>Código </th>
+                    <th>Nome</th>
 
 
                   </tr>
@@ -177,10 +105,48 @@ $incio = ($quantidade_pg * $pagina) - $quantidade_pg;
 
                     <tr>
 
-                      <th> <?php echo $row["id_noticia"] ?> </th>
-                      <th> <?php echo $row["titulo_noticia"] ?> </th>
+                      <th> <?php echo $row["id_categoria"] ?> </th>
+                      <th> <?php echo $row["nome_categoria"] ?> </th>
 
-                      <!-- ================================== lista de dependentes ========================== -->
+                      <form action="cadastro_categoria.php" method="POST" class="form-group">
+
+                        <div id="cadastro" class="modal fade" role="dialog" class="form-group">
+                          <div class="modal-dialog">
+
+                            <!-- Modal content-->
+                            <div class="modal-content">
+                              <div class="modal-header">
+                                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                                <?php
+                                if (isset($_SESSION['msg'])) {
+                                  echo $_SESSION['msg'];
+                                  unset($_SESSION['msg']);
+                                }
+                                ?>
+                                <h4 class="modal-title">Cadastro de categorias</h4>
+                              </div>
+                              <div class="modal-body">
+
+                                <div class="form-group row">
+                                  <label for="inputEmail3" class="col-sm-2 col-form-label">Nome da categoria</label>
+                                  <div class="col-sm-10">
+                                    <input type="text" class="form-control" name="titulo" required>
+                                  </div>
+                                </div>
+
+
+                              </div>
+                              <div class="modal-footer">
+                                <button type="submit" class=" btn btn-primary">Realizar cadastro</button>
+
+                                <button type="submit" class=" btn btn-danger" data-dismiss="modal">Cancelar</button>
+                              </div>
+                            </div>
+
+                          </div>
+                        </div>
+
+                      </form>
 
 
 
@@ -196,7 +162,7 @@ $incio = ($quantidade_pg * $pagina) - $quantidade_pg;
               }
               ?>
               <?php
-              $result_log = "SELECT * from noticia";
+              $result_log = "SELECT * from categoria";
 
               $resultado_log = mysqli_query($conn, $result_log);
 
@@ -207,14 +173,14 @@ $incio = ($quantidade_pg * $pagina) - $quantidade_pg;
                 <nav class="text-center">
                   <ul class="pagination">
 
-                    <li><a href="clientes.php?pagina=1"> Primeira página </a></li>
+                    <li><a href="noticias.php?pagina=1"> Primeira página </a></li>
 
 
                     <?php
                     for ($i = $pagina - $limitador; $i <= $pagina - 1; $i++) {
                       if ($i >= 1) {
                     ?>
-                        <li><a href="clientes.php?pagina=<?php echo $i; ?>"> <?php echo $i; ?></a></li>
+                        <li><a href="noticias.php?pagina=<?php echo $i; ?>"> <?php echo $i; ?></a></li>
 
 
                     <?php }
@@ -225,7 +191,7 @@ $incio = ($quantidade_pg * $pagina) - $quantidade_pg;
                     <?php
                     for ($i = $pagina + 1; $i <= $pagina + $limitador; $i++) {
                       if ($i <= $num_pagina) { ?>
-                        <li><a href="clientes.php?pagina=<?php echo $i; ?>"> <?php echo $i; ?></a></li>
+                        <li><a href="noticias.php?pagina=<?php echo $i; ?>"> <?php echo $i; ?></a></li>
 
                     <?php }
                     }
@@ -233,7 +199,7 @@ $incio = ($quantidade_pg * $pagina) - $quantidade_pg;
 
 
                     ?>
-                    <li><a href="clientes.php?pagina=<?php echo $num_pagina; ?>"> <span aria-hidden="true"> Ultima página </span></a></li>
+                    <li><a href="noticias.php?pagina=<?php echo $num_pagina; ?>"> <span aria-hidden="true"> Ultima página </span></a></li>
 
 
 
@@ -243,7 +209,6 @@ $incio = ($quantidade_pg * $pagina) - $quantidade_pg;
                 <a href="#cadastro" data-toggle="modal"><button type='button' class='btn btn-success'>Cadastrar sócio</button></a>
 
 
-                <a href="relatorio_clientes.php"><button type="button" class="btn btn-dark">Gerar relatório </button>
 
 
             </div>

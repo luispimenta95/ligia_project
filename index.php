@@ -1,4 +1,7 @@
-<?php include 'conecta.php'; ?>
+<?php
+include 'conecta.php';
+include 'config.php';
+?>
 
 <!doctype html>
 <html class="no-js" lang="zxx">
@@ -42,7 +45,7 @@
                             <!-- Trending Top -->
 
                             <?php
-                            $sqlTopo = "SELECT * FROM noticia ORDER BY id_noticia DESC LIMIT 0, 1;";
+                            $sqlTopo = "SELECT id_noticia,titulo_noticia,nome_categoria from noticia n inner join categoria c on n.id_categoria = c.id_categoria ORDER BY id_noticia DESC LIMIT 0, 1;";
                             $resultado_logs = mysqli_query($conn, $sqlTopo);
                             $result3 = $conn->query($sqlTopo);
                             $noticiaTopo = $result3->fetch_assoc();
@@ -56,7 +59,7 @@
                                 <div class="trend-top-img">
                                     <img src="admin/UP/<?php echo $imagem['imagem']; ?>" alt="">
                                     <div class="trend-top-cap">
-                                        <span>Appetizers</span>
+                                        <span><?php echo $noticiaTopo["nome_categoria"] ?></span>
                                         <h2><a href="single-blog.php?id=<?php echo $noticiaTopo["id_noticia"] ?>"><?php echo $noticiaTopo['titulo_noticia']; ?></a></h2>
                                     </div>
                                 </div>
@@ -188,30 +191,7 @@
         <!--Recent Articles End -->
     </main>
 
-    <footer>
-        <!-- Footer Start-->
-        <div class="footer-area footer-padding fix">
-            <div class="container">
-                <!-- footer-bottom aera -->
-                <div class="footer-bottom-area">
-                    <div class="container">
-                        <div class="footer-border">
-                            <div class="row d-flex align-items-center justify-content-between">
-                                <div class="col-lg-12">
-                                    <div class="footer-copy-right">
-                                        <p><!-- Link back to Colorlib can't be removed. Template is licensed under CC BY 3.0. -->
-                                            Copyright &copy;<script>
-                                                document.write(new Date().getFullYear());
-                                            </script> All rights reserved | This template is made with <i class="ti-heart" aria-hidden="true"></i> by <a href="https://colorlib.com" target="_blank">Colorlib</a>
-                                            <!-- Link back to Colorlib can't be removed. Template is licensed under CC BY 3.0. --></p>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <!-- Footer End-->
-    </footer>
+    <?php include 'footer.php'; ?>
 
     <!-- JS here -->
 

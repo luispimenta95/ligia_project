@@ -10,7 +10,7 @@ mysqli_set_charset($conn, 'utf8');
 $pagina = (isset($_GET['pagina'])) ? $_GET['pagina'] : 1;
 $pagina_atual = "clientes.php";
 //Selecionar todos os logs da tabela
-$result_log = "SELECT * from noticia";
+$result_log = "SELECT id_noticia,titulo_noticia,nome_categoria from noticia n inner join categoria c on n.id_categoria = c.id_categoria order by titulo_noticia";
 $resultado_logs = mysqli_query($conn, $result_log);
 
 //Contar o total de logs
@@ -77,7 +77,7 @@ include '../config.php';
           <div class="col-md-12">
             <?php
             if ($total_logs == 0) {
-              $result_logs = "SELECT * from noticia n  limit $incio, $quantidade_pg ";
+              $result_logs = "SELECT id_noticia,titulo_noticia,nome_categoria from noticia n inner join categoria c on n.id_categoria = c.id_categoria  limit $incio, $quantidade_pg ";
 
               $resultado_logs = mysqli_query($conn, $result_logs);
               $total_logs = mysqli_num_rows($resultado_logs);
@@ -90,9 +90,10 @@ include '../config.php';
                 <thead>
                   <tr>
 
-                    <th>Cliente00 </th>
-                    <th>Dependentes</th>
-
+                    <th>Codigo </th>
+                    <th>Titulo</th>
+                    <th>Categoria</th>
+                    <th>Editar</th>
 
                   </tr>
                 </thead>
@@ -107,8 +108,16 @@ include '../config.php';
 
                       <th> <?php echo $row["id_noticia"] ?> </th>
                       <th> <?php echo $row["titulo_noticia"] ?> </th>
+                      <th> <?php echo $row["nome_categoria"] ?> </th>
 
-                      <form action="upload.php" method="POST" class="form-group" enctype="multipart/form-data">
+                      <th>
+
+                        <a href="#edicao<?php echo $row["id_noticia"] ?>" data-toggle="modal"><button type='button' class='btn btn-primary btn-sm'><span class='glyphicon glyphicon-pencil' aria-hidden='true'></span></button></a>
+
+
+                      </th>
+                      <!-- =============================CADASTRO==================================== -->
+                      <form action="cadastro_noticia.php" method="POST" class="form-group" enctype="multipart/form-data">
 
                         <div id="cadastro" class="modal fade" role="dialog" class="form-group">
                           <div class="modal-dialog">
@@ -123,7 +132,7 @@ include '../config.php';
                                   unset($_SESSION['msg']);
                                 }
                                 ?>
-                                <h4 class="modal-title">Cadastro de sócio</h4>
+                                <h4 class="modal-title">Cadastro de noticias</h4>
                               </div>
                               <div class="modal-body">
 
@@ -142,6 +151,25 @@ include '../config.php';
                                 </div>
 
                                 <div class="form-group row">
+                                  <label for="inputEmail3" class="col-sm-2 col-form-label">Categoria</label>
+                                  <div class="col-sm-10">
+                                    <select name="categoria" required>
+                                      <option>Selecione</option>
+                                      <?php
+                                      $sql2 = "SELECT * from categoria c order by c.nome_categoria ";
+                                      $result2 = $conn->query($sql2);
+
+                                      while ($categoria = $result2->fetch_assoc()) {
+
+                                      ?>
+                                        <option value="<?php echo $categoria["id_categoria"]; ?>"><?php echo $categoria["nome_categoria"]; ?></option>
+                                      <?php
+                                      }
+                                      ?>
+                                    </select>
+                                  </div>
+                                </div>
+                                <div class="form-group row">
                                   <label for="inputEmail3" class="col-sm-2 col-form-label">Imagens</label>
                                   <div class="col-sm-10">
                                     <input type="file" class="form-control" id="exampleInputEmail1" name="arquivo[]" multiple="multiple">
@@ -159,7 +187,87 @@ include '../config.php';
                         </div>
 
                       </form>
+                      <!-- ============================= FIM CADASTRO==================================== -->
 
+
+                      <!-- =============================Edicao==================================== -->
+                      <form action="update.php?id=<?php echo $row["id_noticia"]; ?>" method="POST" class="form-group">
+
+                        <div id="edicao<?php echo $row["id_noticia"] ?>" class="modal fade" role="dialog" class="form-group">
+                          <div class="modal-dialog">
+
+                            <!-- Modal content-->
+                            <div class="modal-content">
+                              <div class="modal-header">
+                                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                                <?php
+                                if (isset($_SESSION['msg'])) {
+                                  echo $_SESSION['msg'];
+                                  unset($_SESSION['msg']);
+                                }
+
+
+                                $sql2 = "SELECT * from noticia n where n.id_noticia=" . $row["id_noticia"];
+                                $result2 = $conn->query($sql2);
+                                $noticia = $result2->fetch_assoc();
+
+                                ?>
+                                <h4 class="modal-title">Atualização da noticia <?php echo $noticia['titulo_noticia']; ?></h4>
+                              </div>
+                              <div class="modal-body">
+
+                                <div class="form-group row">
+                                  <label for="inputEmail3" class="col-sm-2 col-form-label">Titulo da noticia</label>
+                                  <div class="col-sm-10">
+                                    <input type="text" class="form-control" name="titulo" value="<?php echo $noticia['titulo_noticia']; ?>" required>
+                                  </div>
+                                </div>
+
+                                <div class="form-group row">
+                                  <label for="inputEmail3" class="col-sm-2 col-form-label">Texto da noticia</label>
+                                  <div class="col-sm-10">
+                                    <textarea class="form-control" id="exampleFormControlTextarea1" rows="3" name="noticia" <?php echo $noticia['texto_noticia']; ?> required></textarea>
+                                  </div>
+                                </div>
+
+                                <div class="form-group row">
+                                  <label for="inputEmail3" class="col-sm-2 col-form-label">Categoria</label>
+                                  <div class="col-sm-10">
+                                    <select name="categoria" required>
+                                      <option>Selecione</option>
+                                      <?php
+                                      $sql2 = "SELECT * from categoria c order by c.nome_categoria ";
+                                      $result2 = $conn->query($sql2);
+
+                                      while ($categoria = $result2->fetch_assoc()) {
+
+                                      ?>
+                                        <option value="<?php echo $categoria["id_categoria"]; ?>"><?php echo $categoria["nome_categoria"]; ?></option>
+                                      <?php
+                                      }
+                                      ?>
+                                    </select>
+                                  </div>
+                                </div>
+                                <div class="form-group row">
+                                  <label for="inputEmail3" class="col-sm-2 col-form-label">Imagens</label>
+                                  <div class="col-sm-10">
+                                    <input type="file" class="form-control" id="exampleInputEmail1" name="arquivo[]" multiple="multiple">
+                                  </div>
+                                </div>
+                              </div>
+                              <div class="modal-footer">
+                                <button type="submit" class=" btn btn-primary">Realizar cadastro</button>
+
+                                <button type="submit" class=" btn btn-danger" data-dismiss="modal">Cancelar</button>
+                              </div>
+                            </div>
+
+                          </div>
+                        </div>
+
+                      </form>
+                      <!-- ============================= FIM Edição==================================== -->
 
 
                     <?php } ?>

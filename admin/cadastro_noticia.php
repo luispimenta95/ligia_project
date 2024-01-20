@@ -3,14 +3,13 @@ include '../conecta.php';
 
 $msg = false;
 
-$nome_promo = $_POST["titulo"];
-$publico = $_POST["noticia"];
-$link = $_POST["link"];
+$titulo = $_POST["titulo"];
+$texto = $_POST["noticia"];
+$categoria = $_POST["categoria"];
 
 
 
-
-$sql_code = "INSERT INTO noticia (titulo_noticia, texto_noticia,video,data_noticia) VALUES ('$nome_promo','$publico', '$link',NOW())"; // Salva o registro do cliente no banco de dados
+$sql_code = "INSERT INTO noticia (titulo_noticia, texto_noticia,id_categoria,data_noticia) VALUES ('$titulo','$texto', '$categoria',NOW())"; // Salva o registro do cliente no banco de dados
 if ($conn->query($sql_code) === TRUE) {
 
   $last_id = $conn->insert_id;

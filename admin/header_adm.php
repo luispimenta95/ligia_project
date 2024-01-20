@@ -10,10 +10,10 @@ $pathAssets = $GLOBALS['titulo'];
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
 
-    <title>Legrano | Área administrativa</title>
+    <title>Blog de noticias | Área administrativa</title>
     <meta name="keywords" content="HTML5 Admin Template" />
-    <meta name="description" content="Legrano Orgânicos - Responsive HTML5 Template">
-    <meta name="author" content="JSOFT.net">
+    <meta name="description" content="Blog de noticias para o GDF">
+    <meta name="author" content="Luis Felipe Araujo Pimenta">
 
     <!-- Mobile Metas -->
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />

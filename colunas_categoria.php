@@ -16,7 +16,7 @@
 
                 ?>
                     <li>
-                        <a href="noticia.php?id=<?php echo $categorias["id_categoria"] ?>" class="d-flex">
+                        <a href="lista_categorias.php?id=<?php echo $categorias["id_categoria"] ?>" class="d-flex">
                             <p><?php echo strtoupper($categorias["nome_categoria"]) ?></p>
                         </a>
                     </li>

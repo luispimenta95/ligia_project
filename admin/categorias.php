@@ -10,7 +10,7 @@ mysqli_set_charset($conn, 'utf8');
 $pagina = (isset($_GET['pagina'])) ? $_GET['pagina'] : 1;
 $pagina_atual = "clientes.php";
 //Selecionar todos os logs da tabela
-$result_log = "SELECT * from categoria";
+$result_log = "SELECT * from categoria order by nome_categoria";
 $resultado_logs = mysqli_query($conn, $result_log);
 
 //Contar o total de logs
@@ -89,11 +89,7 @@ include '../config.php';
               <table class="table table-bordered">
                 <thead>
                   <tr>
-
-                    <th>Código </th>
-                    <th>Nome</th>
-
-
+                    <th>Nome Categoria</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -105,7 +101,6 @@ include '../config.php';
 
                     <tr>
 
-                      <th> <?php echo $row["id_categoria"] ?> </th>
                       <th> <?php echo $row["nome_categoria"] ?> </th>
 
                       <form action="cadastro_categoria.php" method="POST" class="form-group">

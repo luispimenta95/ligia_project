@@ -7,9 +7,9 @@ create table noticia (
 id_noticia int auto_increment not null primary key,
 titulo_noticia varchar(255),
 texto_noticia longtext ,
-video varchar(255),
 data_noticia timestamp,
 id_categoria int,
+status_noticia boolean default 1,
 foreign key(id_categoria) references categoria(id_categoria) on delete restrict on update cascade
 
 );
@@ -29,4 +29,5 @@ imagem varchar(255),
 id_noticia int,
 foreign key(id_noticia) references noticia (id_noticia) ON update cascade on delete cascade
 );
+
 

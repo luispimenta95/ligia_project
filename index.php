@@ -28,6 +28,42 @@ include 'config.php';
     <link rel="stylesheet" href="assets/css/slick.css">
     <link rel="stylesheet" href="assets/css/nice-select.css">
     <link rel="stylesheet" href="assets/css/style.css">
+    <style>
+        @media (max-width: 768px) {
+            .carousel-inner .carousel-item>div {
+                display: none;
+            }
+
+            .carousel-inner .carousel-item>div:first-child {
+                display: block;
+            }
+        }
+
+        .carousel-inner .carousel-item.active,
+        .carousel-inner .carousel-item-next,
+        .carousel-inner .carousel-item-prev {
+            display: flex;
+        }
+
+        /* display 3 */
+        @media (min-width: 768px) {
+
+            .carousel-inner .carousel-item-right.active,
+            .carousel-inner .carousel-item-next {
+                transform: translateX(33.333%);
+            }
+
+            .carousel-inner .carousel-item-left.active,
+            .carousel-inner .carousel-item-prev {
+                transform: translateX(-33.333%);
+            }
+        }
+
+        .carousel-inner .carousel-item-right,
+        .carousel-inner .carousel-item-left {
+            transform: translateX(0);
+        }
+    </style>
 </head>
 
 <body>
@@ -45,7 +81,8 @@ include 'config.php';
                             <!-- Trending Top -->
 
                             <?php
-                            $sqlTopo = "SELECT id_noticia,titulo_noticia,nome_categoria from noticia n inner join categoria c on n.id_categoria = c.id_categoria ORDER BY id_noticia DESC LIMIT 0, 1;";
+                            $sqlTopo = "SELECT id_noticia,titulo_noticia,nome_categoria from noticia n inner join categoria c on n.id_categoria = c.id_categoria where n.status_noticia = 1
+                             ORDER BY id_noticia DESC LIMIT 0, 1;";
                             $resultado_logs = mysqli_query($conn, $sqlTopo);
                             $result3 = $conn->query($sqlTopo);
                             $noticiaTopo = $result3->fetch_assoc();
@@ -82,46 +119,43 @@ include 'config.php';
                             <div class="section-tittle mb-30">
                                 <h3>Recentes</h3>
                             </div>
+
                         </div>
                     </div>
-                    <div class="row">
-                        <div class="col-12">
-                            <div class="weekly-news-active dot-style d-flex dot-style">
-                                <div class="weekly-single">
-                                    <div class="weekly-img">
-                                        <img src="assets/img/news/weeklyNews2.jpg" alt="">
+
+                    <div class="container text-center my-3">
+                        <div class="row mx-auto my-auto">
+                            <div id="recipeCarousel" class="carousel slide w-100" data-ride="carousel">
+                                <div class="carousel-inner w-100" role="listbox">
+                                    <div class="carousel-item active">
+
+                                        <?php
+                                        $sql3 = "SELECT * FROM noticia WHERE datediff(date(now()),data_noticia) < 7  LIMIT 100 offset 0";
+
+                                        $resultado_logs = mysqli_query($conn, $sql3);
+                                        $total_logs = mysqli_num_rows($resultado_logs);
+                                        for ($i = 0; $i < $total_logs; $i++) {
+                                            $noticias = $resultado_logs->fetch_assoc();
+                                        ?>
+                                            <div class="col-md-4">
+                                                <div class="card card-body">
+                                                    <?php
+
+                                                    $sql2 = "SELECT * from imagem_noticia n where n.id_noticia=" . $noticias["id_noticia"] . " LIMIT 1";
+                                                    $result2 = $conn->query($sql2);
+                                                    $imagem = $result2->fetch_assoc();
+
+                                                    ?>
+                                                    <a href="single-blog.php?id=<?php echo $noticias["id_noticia"] ?>">
+                                                        <img class=" img-fluid" src="admin/UP/<?php echo $imagem['imagem']; ?>">
+                                                    </a>
+                                                </div>
+                                            </div>
+                                        <?php } ?>
                                     </div>
-                                    <div class="weekly-caption">
-                                        <span class="color1">Strike</span>
-                                        <h4><a href="#">Welcome To The Best Model Winner Contest</a></h4>
-                                    </div>
-                                </div>
-                                <div class="weekly-single active">
-                                    <div class="weekly-img">
-                                        <img src="assets/img/news/weeklyNews1.jpg" alt="">
-                                    </div>
-                                    <div class="weekly-caption">
-                                        <span class="color1">Strike</span>
-                                        <h4><a href="#">Welcome To The Best Model Winner Contest</a></h4>
-                                    </div>
-                                </div>
-                                <div class="weekly-single">
-                                    <div class="weekly-img">
-                                        <img src="assets/img/news/weeklyNews3.jpg" alt="">
-                                    </div>
-                                    <div class="weekly-caption">
-                                        <span class="color1">Strike</span>
-                                        <h4><a href="#">Welcome To The Best Model Winner Contest</a></h4>
-                                    </div>
-                                </div>
-                                <div class="weekly-single">
-                                    <div class="weekly-img">
-                                        <img src="assets/img/news/weeklyNews1.jpg" alt="">
-                                    </div>
-                                    <div class="weekly-caption">
-                                        <span class="color1">Strike</span>
-                                        <h4><a href="#">Welcome To The Best Model Winner Contest</a></h4>
-                                    </div>
+
+
+
                                 </div>
                             </div>
                         </div>
@@ -143,50 +177,48 @@ include 'config.php';
                             </div>
                         </div>
                     </div>
-                    <div class="row">
-                        <div class="col-12">
-                            <div class="recent-active dot-style d-flex dot-style">
-                                <div class="single-recent mb-100">
-                                    <div class="what-img">
-                                        <img src="assets/img/news/recent1.jpg" alt="">
+                    <div class="container text-center my-3">
+                        <div class="row mx-auto my-auto">
+                            <div id="recipeCarousel" class="carousel slide w-100" data-ride="carousel">
+                                <div class="carousel-inner w-100" role="listbox">
+                                    <div class="carousel-item active">
+
+                                        <?php
+                                        $sql3 = "SELECT * FROM noticia WHERE datediff(date(now()),data_noticia) > 7  LIMIT 100 offset 0";
+
+                                        $resultado_logs = mysqli_query($conn, $sql3);
+                                        $total_logs = mysqli_num_rows($resultado_logs);
+                                        for ($i = 0; $i < $total_logs; $i++) {
+                                            $noticias = $resultado_logs->fetch_assoc();
+                                        ?>
+                                            <div class="col-md-4">
+                                                <div class="card card-body">
+                                                    <?php
+
+                                                    $sql2 = "SELECT * from imagem_noticia n where n.id_noticia=" . $noticias["id_noticia"] . " LIMIT 1";
+                                                    $result2 = $conn->query($sql2);
+                                                    $imagem = $result2->fetch_assoc();
+
+                                                    ?>
+                                                    <a href="single-blog.php?id=<?php echo $noticias["id_noticia"] ?>">
+                                                        <img class=" img-fluid" src="admin/UP/<?php echo $imagem['imagem']; ?>">
+                                                    </a>
+                                                </div>
+                                            </div>
+                                        <?php } ?>
                                     </div>
-                                    <div class="what-cap">
-                                        <span class="color1">Night party</span>
-                                        <h4><a href="#">Welcome To The Best Model Winner Contest</a></h4>
-                                    </div>
-                                </div>
-                                <div class="single-recent mb-100">
-                                    <div class="what-img">
-                                        <img src="assets/img/news/recent2.jpg" alt="">
-                                    </div>
-                                    <div class="what-cap">
-                                        <span class="color1">Night party</span>
-                                        <h4><a href="#">Welcome To The Best Model Winner Contest</a></h4>
-                                    </div>
-                                </div>
-                                <div class="single-recent mb-100">
-                                    <div class="what-img">
-                                        <img src="assets/img/news/recent3.jpg" alt="">
-                                    </div>
-                                    <div class="what-cap">
-                                        <span class="color1">Night party</span>
-                                        <h4><a href="#">Welcome To The Best Model Winner Contest</a></h4>
-                                    </div>
-                                </div>
-                                <div class="single-recent mb-100">
-                                    <div class="what-img">
-                                        <img src="assets/img/news/recent2.jpg" alt="">
-                                    </div>
-                                    <div class="what-cap">
-                                        <span class="color1">Night party</span>
-                                        <h4><a href="#">Welcome To The Best Model Winner Contest</a></h4>
-                                    </div>
+
+
+
                                 </div>
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
+        </div>
+        </div>
+        </div>
         </div>
         <!--Recent Articles End -->
     </main>
@@ -233,7 +265,30 @@ include 'config.php';
     <!-- Jquery Plugins, main Jquery -->
     <script src="./assets/js/plugins.js"></script>
     <script src="./assets/js/main.js"></script>
+    <script>
+        $('#recipeCarousel').carousel({
+            interval: 10000
+        })
 
-</body>
+        $('.carousel .carousel-item').each(function() {
+            var minPerSlide = 3;
+            var next = $(this).next();
+            if (!next.length) {
+                next = $(this).siblings(':first');
+            }
+            next.children(':first-child').clone().appendTo($(this));
 
-</html>
+            for (var i = 0; i < minPerSlide; i++) {
+                next = next.next();
+                if (!next.length) {
+                    next = $(this).siblings(':first');
+                }
+
+                next.children(':first-child').clone().appendTo($(this));
+            }
+        });
+    </script>
+
+    < /body>
+
+        < /html>

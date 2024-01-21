@@ -1,14 +1,14 @@
 ﻿<?php
-  session_start();
-  if (!isset($_SESSION["logado"])) {
-    header("Location:../index.php");
-    session_destroy();
-  }
-  include '../conecta.php';
-  include '../config.php';
+session_start();
+if (!isset($_SESSION["logado"])) {
+  header("Location:../login.php");
+  session_destroy();
+}
+include '../conecta.php';
+include '../config.php';
 
-  $pagina_atual = "home.php";
-  ?>
+$pagina_atual = "home.php";
+?>
 
 <!doctype html>
 <html class="fixed">

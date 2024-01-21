@@ -43,7 +43,6 @@ $datetime = new DateTime("now", new DateTimeZone("America/Recife"));
                         <div class="row d-flex justify-content-between align-items-center">
                             <div class="header-info-left">
                                 <ul>
-                                    <li><img src="assets/img/icon/header_icon1.png" alt="">34ºc, Sunny </li>
                                     <li><img src="assets/img/icon/header_icon1.png" alt=""><?php echo $datetime->format('d/m/Y H:i'); ?></li>
                                 </ul>
                             </div>
@@ -53,23 +52,6 @@ $datetime = new DateTime("now", new DateTimeZone("America/Recife"));
                                     <li><a href="#"><i class="fab fa-instagram"></i></a></li>
                                     <li> <a href="#"><i class="fab fa-pinterest-p"></i></a></li>
                                 </ul>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="header-mid d-none d-md-block">
-                <div class="container">
-                    <div class="row d-flex align-items-center">
-                        <!-- Logo -->
-                        <div class="col-xl-3 col-lg-3 col-md-3">
-                            <div class="logo">
-                                <a href="index.php"><img src="assets/img/logo/logo.png" alt=""></a>
-                            </div>
-                        </div>
-                        <div class="col-xl-9 col-lg-9 col-md-9">
-                            <div class="header-banner f-right ">
-                                <img src="assets/img/hero/header_card.jpg" alt="">
                             </div>
                         </div>
                     </div>
@@ -118,6 +100,27 @@ $datetime = new DateTime("now", new DateTimeZone("America/Recife"));
 
                                                 ?>
                                                     <li><a href="single-blog.php?id=<?php echo $noticias["id_noticia"] ?>"><?php echo $noticias["titulo_noticia"] ?></a></li>
+
+
+
+                                                <?php
+                                                }
+                                                ?>
+
+                                            </ul>
+                                        </li>
+
+                                        <li><a href="#">Parceiros</a>
+                                            <ul class="submenu">
+                                                <?php
+
+                                                $sql2 = "SELECT * from parceiro p order by p.nome_parceiro ";
+                                                $result2 = $conn->query($sql2);
+
+                                                while ($parceiros = $result2->fetch_assoc()) {
+
+                                                ?>
+                                                    <li><a href="single-blog.php?id=<?php echo $parceiros["id_parceiro"] ?>"><?php echo $parceiros["nome_parceiro"] ?></a></li>
 
 
 

@@ -30,4 +30,19 @@ id_noticia int,
 foreign key(id_noticia) references noticia (id_noticia) ON update cascade on delete cascade
 );
 
+create table parceiro (
+id_parceiro int auto_increment not null primary key,
+nome_parceiro varchar(255),
+texto_parceiro longtext ,
+status_parceiro boolean default 1
+);
+
+
+create table imagem_parceiro(
+id_img_parceiro int auto_increment not null primary key,
+imagem varchar(255),
+id_parceiro int,
+foreign key(id_parceiro) references parceiro (id_parceiro) ON update cascade on delete cascade
+);
+
 

@@ -1,5 +1,6 @@
 <?php
-include 'conecta.php';
+require_once('model/model-autenticacao.php');
+$modelAuth = new modelAutenticacao();
 
 
 
@@ -32,7 +33,7 @@ include 'conecta.php';
             <div class="row center">
               <div class="col-md-7 pe-0">
                 <div class="form-left h-100 py-5 px-5">
-                  <form class="row g-4" action="valida_adm.php" method="POST">
+                  <form class="row g-4" action="#" method="POST">
                     <div class="col-12">
                       <label>CPF<span class="text-danger">*</span></label>
                       <div class="input-group">
@@ -53,6 +54,15 @@ include 'conecta.php';
 
                     <div class="col-12">
                       <button type="submit" class="btn btn-primary px-4 float-end mt-4">Realizar login</button>
+                      <?php
+                      if (isset($_POST['cpf']) && isset($_POST['senha'])) {
+                        if ($modelAuth->validaLoginAdministrativo($_POST["cpf"],  $_POST["senha"])) {
+                          header("Location:admin/home.php");
+                        } else {
+                          echo ("<div class='alert alert-danger'>Login ou senha incorreto!</div>");
+                          header("Location:login.php");
+                        }
+                      } ?>
                     </div>
                   </form>
                 </div>

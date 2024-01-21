@@ -1,22 +1,13 @@
 <?php
-include 'conecta.php';
 include 'config.php';
 $id = $_GET['id'];
-$proximo_id = $id + 1;
-$id_anterior = $id - 1;
-
-
-$sql_atual = "SELECT * from noticia n where n.id_noticia=$id";
-$result_atual = $conn->query($sql_atual);
-$noticia_atual = $result_atual->fetch_assoc();
-
-$sql_anterior = "SELECT * from noticia n where n.id_noticia=$id_anterior";
-$result_anterior = $conn->query($sql_anterior);
-$noticia_anterior = $result_anterior->fetch_assoc();
-
-$next_sql = "SELECT * from noticia n where n.id_noticia=$proximo_id";
-$next_result = $conn->query($next_sql);
-$proxima_noticia = $next_result->fetch_assoc();
+include 'model/model-noticia.php';
+include 'model/model-parceiro.php';
+$modelNoticia = new modelNoticias();
+$modelParceiro = new modelParceiros();
+$noticia_atual     = $modelNoticia->recuperaNoticia($id);
+$noticia_anterior  = $modelNoticia->recuperaNoticia($id - 1);
+$proxima_noticia   = $modelNoticia->recuperaNoticia($id + 1);
 ?>
 <!doctype html>
 <html class="no-js" lang="pt-br">
@@ -60,19 +51,15 @@ $proxima_noticia = $next_result->fetch_assoc();
             <!-- The slideshow/carousel -->
             <div class="carousel-inner">
                 <?php
-                $sql3 = "SELECT * FROM parceiro p WHERE p.id_tipo_parceiro = 2 LIMIT 100 offset 0";
 
-                $resultado_logs = mysqli_query($conn, $sql3);
+                $resultado_logs = $modelParceiro->recuperarParceirosTopo();
                 $total_logs = mysqli_num_rows($resultado_logs);
                 for ($i = 0; $i < $total_logs; $i++) {
                     $parceiros = $resultado_logs->fetch_assoc();
                 ?>
                     <div class="carousel-item active">
                         <?php
-
-                        $sql2 = "SELECT * from imagem_parceiro n where n.id_parceiro=" . $parceiros["id_parceiro"] . " LIMIT 1";
-                        $result2 = $conn->query($sql2);
-                        $imagem = $result2->fetch_assoc();
+                        $imagem = $modelParceiro->recuperaImagemPrincipal($parceiros["id_parceiro"]);
 
                         ?>
                         <a href="single-page-parceiro.php?id=<?php echo $parceiros["id_parceiro"] ?>">

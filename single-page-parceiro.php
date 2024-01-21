@@ -6,17 +6,17 @@ $proximo_id = $id + 1;
 $id_anterior = $id - 1;
 
 
-$sql_atual = "SELECT * from noticia n where n.id_noticia=$id";
+$sql_atual = "SELECT * from parceiro n where n.id_parceiro=$id";
 $result_atual = $conn->query($sql_atual);
-$noticia_atual = $result_atual->fetch_assoc();
+$parceiro_atual = $result_atual->fetch_assoc();
 
-$sql_anterior = "SELECT * from noticia n where n.id_noticia=$id_anterior";
+$sql_anterior = "SELECT * from parceiro n where n.id_parceiro=$id_anterior";
 $result_anterior = $conn->query($sql_anterior);
-$noticia_anterior = $result_anterior->fetch_assoc();
+$parceiro_anterior = $result_anterior->fetch_assoc();
 
-$next_sql = "SELECT * from noticia n where n.id_noticia=$proximo_id";
+$next_sql = "SELECT * from parceiro n where n.id_parceiro=$proximo_id";
 $next_result = $conn->query($next_sql);
-$proxima_noticia = $next_result->fetch_assoc();
+$proxima_parceiro = $next_result->fetch_assoc();
 ?>
 <!doctype html>
 <html class="no-js" lang="pt-br">
@@ -51,47 +51,7 @@ $proxima_noticia = $next_result->fetch_assoc();
 <body>
     <header>
         <?php include 'header.php'; ?>
-
-        <!-- Carousel -->
-        <div id="demo" class="carousel slide" data-bs-ride="carousel">
-
-
-
-            <!-- The slideshow/carousel -->
-            <div class="carousel-inner">
-                <?php
-                $sql3 = "SELECT * FROM parceiro p WHERE p.id_tipo_parceiro = 2 LIMIT 100 offset 0";
-
-                $resultado_logs = mysqli_query($conn, $sql3);
-                $total_logs = mysqli_num_rows($resultado_logs);
-                for ($i = 0; $i < $total_logs; $i++) {
-                    $parceiros = $resultado_logs->fetch_assoc();
-                ?>
-                    <div class="carousel-item active">
-                        <?php
-
-                        $sql2 = "SELECT * from imagem_parceiro n where n.id_parceiro=" . $parceiros["id_parceiro"] . " LIMIT 1";
-                        $result2 = $conn->query($sql2);
-                        $imagem = $result2->fetch_assoc();
-
-                        ?>
-                        <a href="single-page-parceiro.php?id=<?php echo $parceiros["id_parceiro"] ?>">
-                            <img class=" img-fluid" src="admin/UP/<?php echo $imagem['imagem']; ?>">
-                        </a>
-                    </div>
-                <?php } ?>
-            </div>
-
-            <!-- Left and right controls/icons -->
-            <button class="carousel-control-prev" type="button" data-bs-target="#demo" data-bs-slide="prev">
-                <span class="carousel-control-prev-icon"></span>
-            </button>
-            <button class="carousel-control-next" type="button" data-bs-target="#demo" data-bs-slide="next">
-                <span class="carousel-control-next-icon"></span>
-            </button>
         </div>
-        </div>
-        <!-- Header End -->
     </header>
 
     <!--================Blog Area =================-->
@@ -104,21 +64,21 @@ $proxima_noticia = $next_result->fetch_assoc();
                         <div class="feature-img">
                             <?php
 
-                            $sql2 = "SELECT * from imagem_noticia n where n.id_noticia=$id LIMIT 1";
+                            $sql2 = "SELECT * from imagem_parceiro n where n.id_parceiro=$id LIMIT 1";
                             $result2 = $conn->query($sql2);
                             $imagem = $result2->fetch_assoc();
                             ?>
                             <img class="img-fluid" src="admin/UP/<?php echo $imagem['imagem']; ?>" alt="">
                         </div>
                         <div class="blog_details">
-                            <h2><?php echo $noticia_atual["titulo_noticia"] ?>
+                            <h2><?php echo $parceiro_atual["nome_parceiro"] ?>
                             </h2>
                             <ul class="blog-info-link mt-3 mb-4">
                                 <li><a href="#"><i class="fa fa-user"></i><?php echo $GLOBALS['titulo']; ?></a></li>
                             </ul>
-                            <p><?php echo nl2br($noticia_atual['texto_noticia']); ?></p>
+                            <p><?php echo nl2br($parceiro_atual['texto_parceiro']); ?></p>
                             <?php
-                            $sql3 = "SELECT * from imagem_noticia n where n.id_noticia=$id LIMIT 100 offset 1";
+                            $sql3 = "SELECT * from imagem_parceiro n where n.id_parceiro=$id LIMIT 100 offset 1";
                             $resultado_logs = mysqli_query($conn, $sql3);
                             $total_logs = mysqli_num_rows($resultado_logs);
                             if ($total_logs > 0) { ?>
@@ -147,34 +107,34 @@ $proxima_noticia = $next_result->fetch_assoc();
                         <div class="navigation-area">
                             <div class="row">
                                 <?php
-                                if (!empty($noticia_anterior)) { ?>
+                                if (!empty($parceiro_anterior)) { ?>
                                     <div class="col-lg-6 col-md-6 col-12 nav-left flex-row d-flex justify-content-start align-items-center">
                                         <div class="thumb">
-                                            <a href="single-blog.php?id=<?php echo $noticia_anterior["id_noticia"] ?>">
+                                            <a href="single-page-parceiro.php?id=<?php echo $parceiro_anterior["id_parceiro"] ?>">
                                                 <img class="img-fluid" src="assets/img/post/preview.png" alt="">
                                             </a>
                                         </div>
                                         <div class="arrow">
-                                            <a href="single-blog.php?id=<?php echo $noticia_anterior["id_noticia"] ?>">
+                                            <a href="single-page-parceiro.php?id=<?php echo $parceiro_anterior["id_parceiro"] ?>">
                                                 <span class="lnr text-white ti-arrow-left"></span>
                                             </a>
                                         </div>
                                         <div class="detials">
-                                            <p>Notícia Anterior</p>
-                                            <a href="single-blog.php?id=<?php echo $noticia_anterior["id_noticia"] ?>">
+                                            <p>Parceiro Anterior</p>
+                                            <a href="single-page-parceiro.php?id=<?php echo $parceiro_anterior["id_parceiro"] ?>">
 
-                                                <h4><?php echo $noticia_anterior["titulo_noticia"] ?></h4>
+                                                <h4><?php echo $parceiro_anterior["nome_parceiro"] ?></h4>
                                             </a>
                                         </div>
                                     </div>
 
                                 <?php }
-                                if (!empty($proxima_noticia)) { ?>
+                                if (!empty($proxima_parceiro)) { ?>
                                     <div class="col-lg-6 col-md-6 col-12 nav-right flex-row d-flex justify-content-end align-items-center">
                                         <div class="detials">
-                                            <p>Próxima notícia</p>
-                                            <a href="single-blog.php?id=<?php echo $proxima_noticia["id_noticia"] ?>">
-                                                <h4><?php echo $proxima_noticia["titulo_noticia"] ?></h4>
+                                            <p>Próximo parceiro</p>
+                                            <a href="single-page-parceiro.php?id=<?php echo $proxima_parceiro["id_parceiro"] ?>">
+                                                <h4><?php echo $proxima_parceiro["nome_parceiro"] ?></h4>
 
                                             </a>
                                         </div>
@@ -184,7 +144,7 @@ $proxima_noticia = $next_result->fetch_assoc();
                                             </a>
                                         </div>
                                         <div class="thumb">
-                                            <a href="single-blog.php?id=<?php echo $proxima_noticia["id_noticia"] ?>">
+                                            <a href="single-page-parceiro.php?id=<?php echo $proxima_parceiro["id_parceiro"] ?>">
                                                 <img class="img-fluid" src="assets/img/post/next.png" alt="">
                                             </a>
                                         </div>
@@ -198,7 +158,7 @@ $proxima_noticia = $next_result->fetch_assoc();
 
             </div>
     </section>
-    <!--================ Blog Area end =================-->
+    <!--================ page-parceiro Area end =================-->
     <?php include 'footer.php'; ?>
 
 

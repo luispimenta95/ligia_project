@@ -10,7 +10,7 @@ mysqli_set_charset($conn, 'utf8');
 $pagina = (isset($_GET['pagina'])) ? $_GET['pagina'] : 1;
 $pagina_atual = "clientes.php";
 //Selecionar todos os logs da tabela
-$result_log = "SELECT id_noticia, status_noticia,titulo_noticia,nome_categoria from noticia n inner join categoria c on n.id_categoria = c.id_categoria order by titulo_noticia";
+$result_log = "SELECT id_parceiro, nome_parceiro,nome_tipo_parceiro from parceiro p inner join tipo_parceiro pc on p.id_tipo_parceiro = pc.id_tipo_parceiro order by nome_parceiro";
 $resultado_logs = mysqli_query($conn, $result_log);
 
 //Contar o total de logs
@@ -77,7 +77,7 @@ include '../config.php';
           <div class="col-md-12">
             <?php
             if ($total_logs == 0) {
-              $result_logs = "SELECT id_noticia, status_noticia,titulo_noticia,nome_categoria from noticia n inner join categoria c on n.id_categoria = c.id_categoria  limit $incio, $quantidade_pg ";
+              $result_logs = "SELECT id_parceiro, nome_parceiro,nome_tipo_parceiro from parceiro p inner join tipo_parceiro pc on p.id_tipo_parceiro = pc.id_tipo_parceiro  limit $incio, $quantidade_pg ";
 
               $resultado_logs = mysqli_query($conn, $result_logs);
               $total_logs = mysqli_num_rows($resultado_logs);
@@ -91,7 +91,7 @@ include '../config.php';
                 <thead>
                   <tr>
 
-                    <th>Titulo</th>
+                    <th>Nome</th>
                     <th>Categoria</th>
                     <th>Ações</th>
 
@@ -107,16 +107,16 @@ include '../config.php';
 
                     <tr>
 
-                      <th> <?php echo $row["titulo_noticia"] ?> </th>
-                      <th> <?php echo $row["nome_categoria"] ?> </th>
+                      <th> <?php echo $row["nome_parceiro"] ?> </th>
+                      <th> <?php echo $row["nome_tipo_parceiro"] ?> </th>
 
 
                       <th>
 
-                        <a href="#edicao<?php echo $row["id_noticia"] ?>" data-toggle="modal"><button type='button' class='btn btn-primary btn-sm'><span class='glyphicon glyphicon-pencil' aria-hidden='true'></span></button></a>
+                        <a href="#edicao<?php echo $row["id_parceiro"] ?>" data-toggle="modal"><button type='button' class='btn btn-primary btn-sm'><span class='glyphicon glyphicon-pencil' aria-hidden='true'></span></button></a>
                       </th>
                       <!-- =============================CADASTRO==================================== -->
-                      <form action="cadastro_noticia.php" method="POST" class="form-group" enctype="multipart/form-data">
+                      <form action="cadastro_parceiro.php" method="POST" class="form-group" enctype="multipart/form-data">
 
                         <div id="cadastro" class="modal fade" role="dialog" class="form-group">
                           <div class="modal-dialog">
@@ -131,37 +131,37 @@ include '../config.php';
                                   unset($_SESSION['msg']);
                                 }
                                 ?>
-                                <h4 class="modal-title">Cadastro de noticias</h4>
+                                <h4 class="modal-title">Cadastro de parceiros</h4>
                               </div>
                               <div class="modal-body">
 
                                 <div class="form-group row">
-                                  <label for="inputEmail3" class="col-sm-2 col-form-label">Titulo da noticia</label>
+                                  <label for="inputEmail3" class="col-sm-2 col-form-label">Titulo do parceiro</label>
                                   <div class="col-sm-10">
                                     <input type="text" class="form-control" name="titulo" required>
                                   </div>
                                 </div>
 
                                 <div class="form-group row">
-                                  <label for="inputEmail3" class="col-sm-2 col-form-label">Texto da noticia</label>
+                                  <label for="inputEmail3" class="col-sm-2 col-form-label">Texto do parceiro</label>
                                   <div class="col-sm-10">
-                                    <textarea class="form-control" id="exampleFormControlTextarea1" rows="3" name="noticia" required></textarea>
+                                    <textarea class="form-control" id="exampleFormControlTextarea1" rows="3" name="parceiro" required></textarea>
                                   </div>
                                 </div>
 
                                 <div class="form-group row">
-                                  <label for="inputEmail3" class="col-sm-2 col-form-label">Categoria</label>
+                                  <label for="inputEmail3" class="col-sm-2 col-form-label">Tipo de posicionamento</label>
                                   <div class="col-sm-10">
                                     <select name="categoria" required>
                                       <option>Selecione</option>
                                       <?php
-                                      $sql2 = "SELECT * from categoria c order by c.nome_categoria ";
+                                      $sql2 = "SELECT * from tipo_parceiro tp order by tp.nome_tipo_parceiro ";
                                       $result2 = $conn->query($sql2);
 
-                                      while ($categoria = $result2->fetch_assoc()) {
+                                      while ($tipos = $result2->fetch_assoc()) {
 
                                       ?>
-                                        <option value="<?php echo $categoria["id_categoria"]; ?>"><?php echo $categoria["nome_categoria"]; ?></option>
+                                        <option value="<?php echo $tipos["id_tipo_parceiro"]; ?>"><?php echo $tipos["nome_tipo_parceiro"]; ?></option>
                                       <?php
                                       }
                                       ?>
@@ -190,9 +190,9 @@ include '../config.php';
 
 
                       <!-- =============================Edicao==================================== -->
-                      <form action="update_noticia.php?id=<?php echo $row["id_noticia"]; ?>" method="POST" class="form-group">
+                      <form action="update_parceiro.php?id=<?php echo $row["id_parceiro"]; ?>" method="POST" class="form-group">
 
-                        <div id="edicao<?php echo $row["id_noticia"] ?>" class="modal fade" role="dialog" class="form-group">
+                        <div id="edicao<?php echo $row["id_parceiro"] ?>" class="modal fade" role="dialog" class="form-group">
                           <div class="modal-dialog">
 
                             <!-- Modal content-->
@@ -206,26 +206,26 @@ include '../config.php';
                                 }
 
 
-                                $sql2 = "SELECT * from noticia n where n.id_noticia=" . $row["id_noticia"];
+                                $sql2 = "SELECT * from parceiro n where n.id_parceiro=" . $row["id_parceiro"];
                                 $result2 = $conn->query($sql2);
-                                $noticia = $result2->fetch_assoc();
+                                $parceiro = $result2->fetch_assoc();
 
                                 ?>
-                                <h4 class="modal-title">Atualização da noticia <?php echo $noticia['titulo_noticia']; ?></h4>
+                                <h4 class="modal-title">Atualização da parceiro <?php echo $parceiro['titulo_parceiro']; ?></h4>
                               </div>
                               <div class="modal-body">
 
                                 <div class="form-group row">
-                                  <label for="inputEmail3" class="col-sm-2 col-form-label">Titulo da noticia</label>
+                                  <label for="inputEmail3" class="col-sm-2 col-form-label">Titulo da parceiro</label>
                                   <div class="col-sm-10">
-                                    <input type="text" class="form-control" name="titulo" value="<?php echo $noticia['titulo_noticia']; ?>" required>
+                                    <input type="text" class="form-control" name="titulo" value="<?php echo $parceiro['titulo_parceiro']; ?>" required>
                                   </div>
                                 </div>
 
                                 <div class="form-group row">
-                                  <label for="inputEmail3" class="col-sm-2 col-form-label">Texto da noticia</label>
+                                  <label for="inputEmail3" class="col-sm-2 col-form-label">Texto da parceiro</label>
                                   <div class="col-sm-10">
-                                    <textarea class="form-control" id="exampleFormControlTextarea1" rows="3" name="noticia" required><?php echo $noticia['texto_noticia']; ?></textarea>
+                                    <textarea class="form-control" id="exampleFormControlTextarea1" rows="3" name="parceiro" required><?php echo $parceiro['texto_parceiro']; ?></textarea>
                                   </div>
                                 </div>
 
@@ -235,19 +235,19 @@ include '../config.php';
                                     <select name="categoria" required>
                                       <option>Selecione</option>
                                       <?php
-                                      $sql2 = "SELECT * from categoria c order by c.nome_categoria ";
+                                      $sql2 = "SELECT * from tipo_parceiro tp order by tp.nome_tipo_parceiro ";
                                       $result2 = $conn->query($sql2);
 
                                       while ($categoria = $result2->fetch_assoc()) {
 
                                       ?>
-                                        <option value="<?php echo $categoria["id_categoria"]; ?>"><?php echo $categoria["nome_categoria"]; ?></option>
+                                        <option value="<?php echo $categoria["id_tipo_parceiro"]; ?>"><?php echo $categoria["nome_tipo_parceiro"]; ?></option>
                                       <?php
                                       }
                                       ?>
                                     </select>
                                   </div>
-                                  <input type="hidden" id="id_noticia" name="id_noticia" value=" <?php echo $noticia["id_noticia"] ?>">
+                                  <input type="hidden" id="id_parceiro" name="id_parceiro" value=" <?php echo $parceiro["id_parceiro"] ?>">
 
                                 </div>
                                 <div class="modal-footer">
@@ -277,7 +277,7 @@ include '../config.php';
               }
               ?>
               <?php
-              $result_log = "SELECT * from noticia";
+              $result_log = "SELECT * from parceiro";
 
               $resultado_log = mysqli_query($conn, $result_log);
 
@@ -288,14 +288,14 @@ include '../config.php';
                 <nav class="text-center">
                   <ul class="pagination">
 
-                    <li><a href="noticias.php?pagina=1"> Primeira página </a></li>
+                    <li><a href="parceiros.php?pagina=1"> Primeira página </a></li>
 
 
                     <?php
                     for ($i = $pagina - $limitador; $i <= $pagina - 1; $i++) {
                       if ($i >= 1) {
                     ?>
-                        <li><a href="noticias.php?pagina=<?php echo $i; ?>"> <?php echo $i; ?></a></li>
+                        <li><a href="parceiros.php?pagina=<?php echo $i; ?>"> <?php echo $i; ?></a></li>
 
 
                     <?php }
@@ -306,7 +306,7 @@ include '../config.php';
                     <?php
                     for ($i = $pagina + 1; $i <= $pagina + $limitador; $i++) {
                       if ($i <= $num_pagina) { ?>
-                        <li><a href="noticias.php?pagina=<?php echo $i; ?>"> <?php echo $i; ?></a></li>
+                        <li><a href="parceiros.php?pagina=<?php echo $i; ?>"> <?php echo $i; ?></a></li>
 
                     <?php }
                     }
@@ -314,14 +314,14 @@ include '../config.php';
 
 
                     ?>
-                    <li><a href="noticias.php?pagina=<?php echo $num_pagina; ?>"> <span aria-hidden="true"> Ultima página </span></a></li>
+                    <li><a href="parceiros.php?pagina=<?php echo $num_pagina; ?>"> <span aria-hidden="true"> Ultima página </span></a></li>
 
 
 
                   <?php } ?>
                   </ul>
                 </nav>
-                <a href="#cadastro" data-toggle="modal"><button type='button' class='btn btn-success'>Cadastrar notícias</button></a>
+                <a href="#cadastro" data-toggle="modal"><button type='button' class='btn btn-success'>Cadastrar parceiros</button></a>
 
 
 

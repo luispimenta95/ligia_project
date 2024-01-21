@@ -59,7 +59,7 @@ $modelAuth = new modelAutenticacao();
                         if ($modelAuth->validaLoginAdministrativo($_POST["cpf"],  $_POST["senha"])) {
                           header("Location:admin/home.php");
                         } else {
-                          echo ("<div class='alert alert-danger'>Login ou senha incorreto!</div>");
+                          // echo ("<div class='alert alert-danger'>Login ou senha incorreto!</div>");
                           header("Location:login.php");
                         }
                       } ?>

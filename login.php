@@ -4,83 +4,69 @@ include 'conecta.php';
 
 
 ?>
-
 <!DOCTYPE html>
-<html lang="pt-br">
-  <head>
-    <!-- Meta tags Obrigatórias -->
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<html lang="en">
 
-    <!-- Bootstrap CSS -->
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Login Administrativo | SESTI GDF</title>
+  <link rel="stylesheet" href="public/css/login.css">
 
-       <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
-    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+</head>
 
-    <!-- <link href="//netdna.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap-glyphicons.css" rel="stylesheet"> -->
-
-    <title>Arte na Rua | Login</title>
-        <script async src="https://www.googletagmanager.com/gtag/js?id=UA-172818631-1"></script>
-    <script>
-      window.dataLayer = window.dataLayer || [];
-      function gtag(){dataLayer.push(arguments);}
-      gtag('js', new Date());
-    
-      gtag('config', 'UA-172818631-1');
-    </script>
-  </head>
-  <body class="bg-success">
-<div class="container ">
-  <header>
-    
-
-   
-  </header>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.4.1/font/bootstrap-icons.css">
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet">
 
 
-<h1 class="text-center"> Login administrativo blog arte nas ruas</h1>
-<br><br><br>
-<section class="text-center ">
+</head>
 
-		<?php
-					if(isset($_SESSION['msg'])){
-						echo $_SESSION['msg'];
-						unset($_SESSION['msg']);
-					}
-					
-				?>
+<body>
 
-	<form action="valida_adm.php" method="POST">
-  <div class="form-group row ">
-    <label for="inputEmail3" class="col-sm-2 col-form-label">CPF</label>
-    <div class="col-sm-6">
-      <input type="text" name="cpf" class="form-control" id="inputEmail3" placeholder="CPF">
+  <div class="login-page bg-light">
+    <div class="container">
+      <div class="row">
+        <div class="col-lg-8 offset-lg-1">
+          <h3 class="mb-3 text-center">Login Administrativo</h3>
+          <div class="bg-white shadow rounded">
+            <div class="row center">
+              <div class="col-md-7 pe-0">
+                <div class="form-left h-100 py-5 px-5">
+                  <form class="row g-4" action="valida_adm.php" method="POST">
+                    <div class="col-12">
+                      <label>CPF<span class="text-danger">*</span></label>
+                      <div class="input-group">
+                        <div class="input-group-text"><i class="bi bi-person-fill"></i></div>
+                        <input type="text" name="cpf" class="form-control" placeholder="Informe o CPF">
+                      </div>
+                    </div>
+
+                    <div class="col-12">
+                      <label>Senha<span class="text-danger">*</span></label>
+                      <div class="input-group">
+                        <div class="input-group-text"><i class="bi bi-lock-fill"></i></div>
+                        <input type="password" name="senha" class="form-control" placeholder="Informe a Senha">
+                      </div>
+                    </div>
+
+
+
+                    <div class="col-12">
+                      <button type="submit" class="btn btn-primary px-4 float-end mt-4">Realizar login</button>
+                    </div>
+                  </form>
+                </div>
+              </div>
+
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
   </div>
-  <div class="form-group row">
-    <label for="inputPassword3" class="col-sm-2 col-form-label">Senha</label>
-    <div class="col-sm-6">
-      <input type="password" name="senha" class="form-control" id="inputPassword3" placeholder="Senha">
-    </div>
-  </div>
 
-
-  <div class="form-group row">
-    <div class="col-sm-12">
-      <button type="submit" class="btn btn-primary">Entrar</button>
-    </div>
-  </div>
-</form>
-
-</section>
-
+  <!-- Bootstrap JS -->
 
 </body>
-    <!-- JavaScript (Opcional) -->
-    <!-- jQuery primeiro, depois Popper.js, depois Bootstrap JS -->
-    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js" integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49" crossorigin="anonymous"></script>
-    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js" integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy" crossorigin="anonymous"></script>
-  </body>
+
 </html>

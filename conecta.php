@@ -1,5 +1,5 @@
 <?php
-$isLocal = false;
+$isLocal = true;
 $conn = null;
 if ($isLocal) {
    $conn = new MySQLi('localhost', 'root', '', 'portal');

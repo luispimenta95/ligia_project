@@ -1,6 +1,8 @@
 <?php
-include 'conecta.php';
+include 'model/model-noticia.php';
+$model = new modelNoticias();
 include 'config.php';
+
 ?>
 
 <!doctype html>
@@ -81,16 +83,9 @@ include 'config.php';
                             <!-- Trending Top -->
 
                             <?php
-                            $sqlTopo = "SELECT id_noticia,titulo_noticia,nome_categoria from noticia n inner join categoria c on n.id_categoria = c.id_categoria where n.status_noticia = 1
-                             ORDER BY id_noticia DESC LIMIT 0, 1;";
-                            $resultado_logs = mysqli_query($conn, $sqlTopo);
-                            $result3 = $conn->query($sqlTopo);
-                            $noticiaTopo = $result3->fetch_assoc();
 
-                            $sql2 = "SELECT * from imagem_noticia n where n.id_noticia=" . $noticiaTopo["id_noticia"] . " LIMIT 1";
-                            $result2 = $conn->query($sql2);
-                            $imagem = $result2->fetch_assoc();
-
+                            $noticiaTopo = $model->recuperaNoticiaPrincipal();
+                            $imagem = $model->recuperaImagemPrincipal($noticiaTopo['id_noticia']);
                             ?>
                             <div class="trending-top mb-30">
                                 <div class="trend-top-img">
@@ -130,9 +125,7 @@ include 'config.php';
                                     <div class="carousel-item active">
 
                                         <?php
-                                        $sql3 = "SELECT * FROM noticia WHERE datediff(date(now()),data_noticia) < 7  LIMIT 100 offset 0";
-
-                                        $resultado_logs = mysqli_query($conn, $sql3);
+                                        $resultado_logs = $model->recuperarNoticiasRecentes();
                                         $total_logs = mysqli_num_rows($resultado_logs);
                                         for ($i = 0; $i < $total_logs; $i++) {
                                             $noticias = $resultado_logs->fetch_assoc();
@@ -140,10 +133,7 @@ include 'config.php';
                                             <div class="col-md-4">
                                                 <div class="card card-body">
                                                     <?php
-
-                                                    $sql2 = "SELECT * from imagem_noticia n where n.id_noticia=" . $noticias["id_noticia"] . " LIMIT 1";
-                                                    $result2 = $conn->query($sql2);
-                                                    $imagem = $result2->fetch_assoc();
+                                                    $imagem = $model->recuperaImagemPrincipal($noticias['id_noticia']);
 
                                                     ?>
                                                     <a href="single-blog.php?id=<?php echo $noticias["id_noticia"] ?>">
@@ -184,9 +174,8 @@ include 'config.php';
                                     <div class="carousel-item active">
 
                                         <?php
-                                        $sql3 = "SELECT * FROM noticia WHERE datediff(date(now()),data_noticia) > 7  LIMIT 100 offset 0";
 
-                                        $resultado_logs = mysqli_query($conn, $sql3);
+                                        $resultado_logs = $model->recuperarNoticiasAntigas();
                                         $total_logs = mysqli_num_rows($resultado_logs);
                                         for ($i = 0; $i < $total_logs; $i++) {
                                             $noticias = $resultado_logs->fetch_assoc();
@@ -195,9 +184,8 @@ include 'config.php';
                                                 <div class="card card-body">
                                                     <?php
 
-                                                    $sql2 = "SELECT * from imagem_noticia n where n.id_noticia=" . $noticias["id_noticia"] . " LIMIT 1";
-                                                    $result2 = $conn->query($sql2);
-                                                    $imagem = $result2->fetch_assoc();
+
+                                                    $imagem = $model->recuperaImagemPrincipal($noticias['id_noticia']);
 
                                                     ?>
                                                     <a href="single-blog.php?id=<?php echo $noticias["id_noticia"] ?>">

@@ -17,6 +17,9 @@
                <a href="noticias.php">
                    <li class="list-group-item">Noticias </li>
                </a>
+               <a href="parceiros.php">
+                   <li class="list-group-item">Parceiros </li>
+               </a>
 
 
            </ul>

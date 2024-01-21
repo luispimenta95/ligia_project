@@ -17,7 +17,7 @@ $pathAssets = $GLOBALS['titulo'];
 
     <!-- Mobile Metas -->
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
-    <link rel="shortcut icon" href="../public/assets/images/logo2.jpg" type="image/x-icon" />
+    <link rel="shortcut icon" href="../public/assets/images/logo_gdf.png" type="image/x-icon" />
     <link rel="shouticon">
     <!-- Web Fonts  -->
     <link href="http://fonts.googleapis.com/css?family=Open+Sans:300,400,600,700,800|Shadows+Into+Light" rel="stylesheet" type="text/css">

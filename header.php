@@ -120,7 +120,7 @@ $datetime = new DateTime("now", new DateTimeZone("America/Recife"));
                                                 while ($parceiros = $result2->fetch_assoc()) {
 
                                                 ?>
-                                                    <li><a href="single-blog.php?id=<?php echo $parceiros["id_parceiro"] ?>"><?php echo $parceiros["nome_parceiro"] ?></a></li>
+                                                    <li><a href="single-page-parceiro.php?id=<?php echo $parceiros["id_parceiro"] ?>"><?php echo $parceiros["nome_parceiro"] ?></a></li>
 
 
 

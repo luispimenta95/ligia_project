@@ -10,7 +10,7 @@ mysqli_set_charset($conn, 'utf8');
 $pagina = (isset($_GET['pagina'])) ? $_GET['pagina'] : 1;
 $pagina_atual = "clientes.php";
 //Selecionar todos os logs da tabela
-$result_log = "SELECT id_noticia,titulo_noticia,nome_categoria from noticia n inner join categoria c on n.id_categoria = c.id_categoria order by titulo_noticia";
+$result_log = "SELECT id_noticia, status_noticia,titulo_noticia,nome_categoria from noticia n inner join categoria c on n.id_categoria = c.id_categoria order by titulo_noticia";
 $resultado_logs = mysqli_query($conn, $result_log);
 
 //Contar o total de logs
@@ -77,7 +77,7 @@ include '../config.php';
           <div class="col-md-12">
             <?php
             if ($total_logs == 0) {
-              $result_logs = "SELECT id_noticia,titulo_noticia,nome_categoria from noticia n inner join categoria c on n.id_categoria = c.id_categoria  limit $incio, $quantidade_pg ";
+              $result_logs = "SELECT id_noticia, status_noticia,titulo_noticia,nome_categoria from noticia n inner join categoria c on n.id_categoria = c.id_categoria  limit $incio, $quantidade_pg ";
 
               $resultado_logs = mysqli_query($conn, $result_logs);
               $total_logs = mysqli_num_rows($resultado_logs);
@@ -86,14 +86,14 @@ include '../config.php';
             }
             ?>
             <div class="table-responsive">
+
               <table class="table table-bordered">
                 <thead>
                   <tr>
 
-                    <th>Codigo </th>
                     <th>Titulo</th>
                     <th>Categoria</th>
-                    <th>Editar</th>
+                    <th>Ações</th>
 
                   </tr>
                 </thead>
@@ -101,20 +101,19 @@ include '../config.php';
                   <?php
 
 
-                  while ($row = mysqli_fetch_assoc($resultado_logs)) { ?>
+                  while ($row = mysqli_fetch_assoc($resultado_logs)) {
 
+                  ?>
 
                     <tr>
 
-                      <th> <?php echo $row["id_noticia"] ?> </th>
                       <th> <?php echo $row["titulo_noticia"] ?> </th>
                       <th> <?php echo $row["nome_categoria"] ?> </th>
+
 
                       <th>
 
                         <a href="#edicao<?php echo $row["id_noticia"] ?>" data-toggle="modal"><button type='button' class='btn btn-primary btn-sm'><span class='glyphicon glyphicon-pencil' aria-hidden='true'></span></button></a>
-
-
                       </th>
                       <!-- =============================CADASTRO==================================== -->
                       <form action="cadastro_noticia.php" method="POST" class="form-group" enctype="multipart/form-data">
@@ -191,7 +190,7 @@ include '../config.php';
 
 
                       <!-- =============================Edicao==================================== -->
-                      <form action="update.php?id=<?php echo $row["id_noticia"]; ?>" method="POST" class="form-group">
+                      <form action="update_noticia.php?id=<?php echo $row["id_noticia"]; ?>" method="POST" class="form-group">
 
                         <div id="edicao<?php echo $row["id_noticia"] ?>" class="modal fade" role="dialog" class="form-group">
                           <div class="modal-dialog">
@@ -226,7 +225,7 @@ include '../config.php';
                                 <div class="form-group row">
                                   <label for="inputEmail3" class="col-sm-2 col-form-label">Texto da noticia</label>
                                   <div class="col-sm-10">
-                                    <textarea class="form-control" id="exampleFormControlTextarea1" rows="3" name="noticia" <?php echo $noticia['texto_noticia']; ?> required></textarea>
+                                    <textarea class="form-control" id="exampleFormControlTextarea1" rows="3" name="noticia" required><?php echo $noticia['texto_noticia']; ?></textarea>
                                   </div>
                                 </div>
 
@@ -248,26 +247,23 @@ include '../config.php';
                                       ?>
                                     </select>
                                   </div>
-                                </div>
-                                <div class="form-group row">
-                                  <label for="inputEmail3" class="col-sm-2 col-form-label">Imagens</label>
-                                  <div class="col-sm-10">
-                                    <input type="file" class="form-control" id="exampleInputEmail1" name="arquivo[]" multiple="multiple">
-                                  </div>
-                                </div>
-                              </div>
-                              <div class="modal-footer">
-                                <button type="submit" class=" btn btn-primary">Realizar cadastro</button>
+                                  <input type="hidden" id="id_noticia" name="id_noticia" value=" <?php echo $noticia["id_noticia"] ?>">
 
-                                <button type="submit" class=" btn btn-danger" data-dismiss="modal">Cancelar</button>
+                                </div>
+                                <div class="modal-footer">
+                                  <button type="submit" class=" btn btn-primary">Realizar cadastro</button>
+
+                                  <button type="submit" class=" btn btn-danger" data-dismiss="modal">Cancelar</button>
+                                </div>
                               </div>
+
                             </div>
-
                           </div>
-                        </div>
 
                       </form>
                       <!-- ============================= FIM Edição==================================== -->
+
+
 
 
                     <?php } ?>
@@ -276,9 +272,8 @@ include '../config.php';
                 </tbody>
               </table>
               <?php
-              if (isset($msg_pesquisa)) {
-                echo $msg_pesquisa;
-                unset($msg_pesquisa);
+              if (isset($_SESSION['msg'])) {
+                echo $_SESSION['msg'];
               }
               ?>
               <?php
@@ -326,7 +321,7 @@ include '../config.php';
                   <?php } ?>
                   </ul>
                 </nav>
-                <a href="#cadastro" data-toggle="modal"><button type='button' class='btn btn-success'>Cadastrar sócio</button></a>
+                <a href="#cadastro" data-toggle="modal"><button type='button' class='btn btn-success'>Cadastrar notícias</button></a>
 
 
 

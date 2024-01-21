@@ -90,6 +90,8 @@ include '../config.php';
                 <thead>
                   <tr>
                     <th>Nome Categoria</th>
+                    <th>Ações</th>
+
                   </tr>
                 </thead>
                 <tbody>
@@ -102,7 +104,10 @@ include '../config.php';
                     <tr>
 
                       <th> <?php echo $row["nome_categoria"] ?> </th>
-
+                      <th>
+                        <a href="#edicao<?php echo $row["id_categoria"] ?>" data-toggle="modal"><button type='button' class='btn btn-primary btn-sm'><span class='glyphicon glyphicon-pencil' aria-hidden='true'></span></button></a>
+                      </th>
+                      <!-- ====================================================== CADASTRO ====================================================== -->
                       <form action="cadastro_categoria.php" method="POST" class="form-group">
 
                         <div id="cadastro" class="modal fade" role="dialog" class="form-group">
@@ -132,7 +137,7 @@ include '../config.php';
 
                               </div>
                               <div class="modal-footer">
-                                <button type="submit" class=" btn btn-primary">Realizar cadastro</button>
+                                <button type="submit" class=" btn btn-primary">Confirmar</button>
 
                                 <button type="submit" class=" btn btn-danger" data-dismiss="modal">Cancelar</button>
                               </div>
@@ -142,6 +147,53 @@ include '../config.php';
                         </div>
 
                       </form>
+                      <!-- ====================================================== FIM CADASTRO ====================================================== -->
+                      <!-- ====================================================== EDIÇÃO ====================================================== -->
+                      <form action="update_categoria.php?id=<?php echo $row["id_categoria"]; ?>" method="POST" class="form-group">
+
+                        <div id="edicao<?php echo $row["id_categoria"] ?>" class="modal fade" role="dialog" class="form-group">
+                          <div class="modal-dialog">
+
+                            <!-- Modal content-->
+                            <div class="modal-content">
+                              <div class="modal-header">
+                                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                                <?php
+                                $sql2 = "SELECT * from categoria c where c.id_categoria=" . $row["id_categoria"];
+                                $result2 = $conn->query($sql2);
+                                $categoria = $result2->fetch_assoc();
+                                if (isset($_SESSION['msg'])) {
+                                  echo $_SESSION['msg'];
+                                  unset($_SESSION['msg']);
+                                }
+                                ?>
+                                <h4 class="modal-title">Edição de categorias</h4>
+                              </div>
+                              <div class="modal-body">
+
+                                <div class="form-group row">
+                                  <label for="inputEmail3" class="col-sm-2 col-form-label">Nome da categoria</label>
+                                  <div class="col-sm-10">
+                                    <input type="text" class="form-control" name="nome" value="<?php echo $categoria['nome_categoria']; ?>" required>
+                                    <input type="hidden" id="id_categoria" name="id_categoria" value=" <?php echo $categoria["id_categoria"] ?>">
+
+                                  </div>
+                                </div>
+
+
+                              </div>
+                              <div class="modal-footer">
+                                <button type="submit" class=" btn btn-primary">Confirmar</button>
+
+                                <button type="submit" class=" btn btn-danger" data-dismiss="modal">Cancelar</button>
+                              </div>
+                            </div>
+
+                          </div>
+                        </div>
+
+                      </form>
+                      <!-- ====================================================== FIM EDIÇÃO ====================================================== -->
 
 
 
@@ -201,7 +253,7 @@ include '../config.php';
                   <?php } ?>
                   </ul>
                 </nav>
-                <a href="#cadastro" data-toggle="modal"><button type='button' class='btn btn-success'>Cadastrar sócio</button></a>
+                <a href="#cadastro" data-toggle="modal"><button type='button' class='btn btn-success'>Cadastrar categoria</button></a>
 
 
 

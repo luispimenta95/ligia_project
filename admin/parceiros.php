@@ -211,14 +211,14 @@ include '../config.php';
                                 $parceiro = $result2->fetch_assoc();
 
                                 ?>
-                                <h4 class="modal-title">Atualização da parceiro <?php echo $parceiro['titulo_parceiro']; ?></h4>
+                                <h4 class="modal-title">Atualização do parceiro <?php echo $parceiro['nome_parceiro']; ?></h4>
                               </div>
                               <div class="modal-body">
 
                                 <div class="form-group row">
-                                  <label for="inputEmail3" class="col-sm-2 col-form-label">Titulo da parceiro</label>
+                                  <label for="inputEmail3" class="col-sm-2 col-form-label">Nome do parceiro</label>
                                   <div class="col-sm-10">
-                                    <input type="text" class="form-control" name="titulo" value="<?php echo $parceiro['titulo_parceiro']; ?>" required>
+                                    <input type="text" class="form-control" name="titulo" value="<?php echo $parceiro['nome_parceiro']; ?>" required>
                                   </div>
                                 </div>
 
